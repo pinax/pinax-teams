@@ -1,0 +1,4 @@
+[run]
+source = teams
+omit = teams/tests/*
+branch = 1
