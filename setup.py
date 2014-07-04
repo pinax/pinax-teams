@@ -22,7 +22,7 @@ setup(
     packages=find_packages(),
     tests_require=[
         "Django>=1.5",
-        "django-reversion==1.7",
+        "django-reversion==1.8.1",
         "kaleo==1.5",
         "unicode-slugify==0.1.1",
         "Pillow==2.3.0",
@@ -30,7 +30,7 @@ setup(
     ],
     install_required=[
         "Django>=1.5",
-        "django-reversion==1.7",
+        "django-reversion==1.8.1",
         "kaleo==1.5",
         "unicode-slugify==0.1.1",
         "Pillow==2.3.0",
