@@ -1,5 +1,5 @@
 ====================
-django-teams
+pinax-teams
 ====================
 
 Provides user teams to a Django project.

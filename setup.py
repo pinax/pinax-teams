@@ -14,10 +14,10 @@ setup(
     author="",
     author_email="",
     description="",
-    name="django-teams",
+    name="pinax-teams",
     long_description=read("README.rst"),
     version=__import__("teams").__version__,
-    url="http://django-teams.rtfd.org/",
+    url="http://pinax-teams.rtfd.org/",
     license="MIT",
     packages=find_packages(),
     tests_require=[

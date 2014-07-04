@@ -6,7 +6,7 @@ Installation
 
 * Install the development version::
 
-    pip install django-teams
+    pip install pinax-teams
 
 * Add ``teams`` to your ``INSTALLED_APPS`` setting::
 
