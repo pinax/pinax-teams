@@ -21,7 +21,7 @@ setup(
     license="MIT",
     packages=find_packages(),
     tests_require=[
-        "Django>=1.5",
+        "Django>=1.6.5",
         "django-reversion==1.8.1",
         "kaleo==1.5",
         "unicode-slugify==0.1.1",
@@ -29,7 +29,7 @@ setup(
         "django-user-accounts==1.0c9"
     ],
     install_required=[
-        "Django>=1.5",
+        "Django>=1.6.5",
         "django-reversion==1.8.1",
         "kaleo==1.5",
         "unicode-slugify==0.1.1",
