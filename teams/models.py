@@ -55,6 +55,9 @@ class Team(models.Model):
     def get_absolute_url(self):
         return ("team_detail", [self.slug])
 
+    def __str__(self):
+        return self.name
+
     def __unicode__(self):
         return self.name
 
@@ -257,8 +260,11 @@ class Membership(models.Model):
     def invitee(self):
         return self.user or self.invite.to_user_email
 
-    def __unicode__(self):
+    def __str__(self):
         return "{0} in {1}".format(self.user, self.team)
+
+    def __unicode__(self):
+        return u"{0} in {1}".format(self.user, self.team)
 
     class Meta:
         unique_together = [("team", "user", "invite")]
