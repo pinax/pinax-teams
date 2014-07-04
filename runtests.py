@@ -12,6 +12,8 @@ DEFAULT_SETTINGS = dict(
         "django.contrib.auth",
         "django.contrib.contenttypes",
         "django.contrib.sites",
+        "kaleo",
+        "account",
         "teams",
         "teams.tests"
     ],
