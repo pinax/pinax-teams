@@ -21,7 +21,7 @@ setup(
     license="MIT",
     packages=find_packages(),
     tests_require=[
-        "Django>=1.4",
+        "Django>=1.5",
     ],
     test_suite="runtests.runtests",
     classifiers=[
