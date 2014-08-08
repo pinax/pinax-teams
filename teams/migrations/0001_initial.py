@@ -54,6 +54,16 @@ class Migration(SchemaMigration):
 
 
     models = {
+        u'kaleo.joininvitation': {
+            'Meta': {'object_name': 'JoinInvitation'},
+            'from_user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'invites_sent'", 'to': u"orm['auth.User']"}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'message': ('django.db.models.fields.TextField', [], {'null': 'True'}),
+            'sent': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
+            'signup_code': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['account.SignupCode']", 'unique': 'True'}),
+            'status': ('django.db.models.fields.IntegerField', [], {}),
+            'to_user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'invites_received'", 'null': 'True', 'to': u"orm['auth.User']"})
+        },
         u'teams.membership': {
             'Meta': {'unique_together': "[('team', 'user', 'invite')]", 'object_name': 'Membership'},
             'created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
