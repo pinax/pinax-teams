@@ -7,6 +7,10 @@ from django.db import models
 
 class Migration(SchemaMigration):
 
+    depends_on = (
+        ("reversion", "0007_auto__del_field_version_type"),
+    )
+
     def forwards(self, orm):
         # Adding model 'Team'
         db.create_table(u'teams_team', (
