@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.template import RequestContext
 from django.template.loader import render_to_string
 from django.views.decorators.http import require_POST
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.edit import CreateView
 from django.views.generic import ListView
 
 from django.contrib.auth.models import User
@@ -31,28 +31,27 @@ class TeamCreateView(LoginRequiredMixin, CreateView):
         return HttpResponseRedirect(self.get_success_url())
 
 
-class TeamUpdateView(LoginRequiredMixin, UpdateView):
-
-    form_class = TeamForm
-    model = Team
-
-    def get(self, request, *args, **kwargs):
-        response = super(TeamUpdateView, self).get(request, *args, **kwargs)
-        if not self.object.is_owner_or_manager(request.user):
-            response = HttpResponseForbidden()
-        return response
-
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        if not self.object.is_owner_or_manager(request.user):
-            return HttpResponseForbidden()
-        return super(TeamUpdateView, self).post(request, *args, **kwargs)
 
 
 class TeamListView(ListView):
 
     model = Team
     context_object_name = "teams"
+
+
+@login_required
+def team_update(request):
+    team = request.team
+    if not team.is_owner_or_manager(request.user):
+        return HttpResponseForbidden()
+    if request.method == "POST":
+        form = TeamForm(request.POST, instance=team)
+        if form.is_valid():
+            form.save()
+            return redirect(team.get_absolute_url())
+    else:
+        form = TeamForm(instance=team)
+    return render(request, "teams/team_form.html", {"form": form, "team": team})
 
 
 @login_required
