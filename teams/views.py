@@ -17,6 +17,7 @@ from account.mixins import LoginRequiredMixin
 
 from .decorators import team_required
 from .forms import TeamInviteUserForm, TeamForm
+from .hooks import hookset
 from .models import Team, Membership
 
 
@@ -233,7 +234,7 @@ def autocomplete_users(request):
     results = []
     if q:
         results.extend([
-            {"pk": x.pk, "email": x.email, "name": x.get_full_name()}
+            hookset.get_autocomplete_result(x)
             for x in users.filter(
                 Q(email__icontains=q) |
                 Q(username__icontains=q) |

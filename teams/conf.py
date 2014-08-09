@@ -22,7 +22,11 @@ def load_path_attr(path):
 class TeamAppConf(AppConf):
 
     PROFILE_MODEL = ""
+    HOOKSET = "teams.hooks.TeamDefaultHookset"
 
     def configure_profile_model(self, value):
         if value:
             return load_path_attr(value)
+
+    def configure_hookset(self, value):
+        return load_path_attr(value)()

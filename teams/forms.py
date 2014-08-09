@@ -1,9 +1,8 @@
 from django import forms
 
-from django.core.urlresolvers import reverse
-
 from django.contrib.auth.models import User
 
+from .hooks import hookset
 from .models import Membership, Team, create_slug
 
 
@@ -40,8 +39,8 @@ class TeamInviteUserForm(forms.Form):
     def __init__(self, *args, **kwargs):
         self.team = kwargs.pop("team")
         super(TeamInviteUserForm, self).__init__(*args, **kwargs)
-        self.fields["invitee"].widget.attrs["data-autocomplete-url"] = reverse(
+        self.fields["invitee"].widget.attrs["data-autocomplete-url"] = hookset.build_team_url(
             "team_autocomplete_users",
-            args=[self.team.slug]
+            self.team.slug
         )
         self.fields["invitee"].widget.attrs["placeholder"] = "email address"
