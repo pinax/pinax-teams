@@ -15,6 +15,7 @@ from django.contrib import messages
 from account.decorators import login_required
 from account.mixins import LoginRequiredMixin
 
+from .decorators import team_required
 from .forms import TeamInviteUserForm, TeamForm
 from .models import Team, Membership
 
@@ -31,14 +32,13 @@ class TeamCreateView(LoginRequiredMixin, CreateView):
         return HttpResponseRedirect(self.get_success_url())
 
 
-
-
 class TeamListView(ListView):
 
     model = Team
     context_object_name = "teams"
 
 
+@team_required
 @login_required
 def team_update(request):
     team = request.team
@@ -54,9 +54,10 @@ def team_update(request):
     return render(request, "teams/team_form.html", {"form": form, "team": team})
 
 
+@team_required
 @login_required
-def team_detail(request, slug):
-    team = get_object_or_404(Team, slug=slug)
+def team_detail(request):
+    team = request.team
     state = team.state_for(request.user)
     role = team.role_for(request.user)
     if team.member_access == Team.MEMBER_ACCESS_INVITATION and state is None:
@@ -72,9 +73,10 @@ def team_detail(request, slug):
     })
 
 
+@team_required
 @login_required
-def team_manage(request, slug):
-    team = get_object_or_404(Team, slug=slug)
+def team_manage(request):
+    team = request.team
     state = team.state_for(request.user)
     role = team.role_for(request.user)
     if team.manager_access == Team.MEMBER_ACCESS_INVITATION and \
@@ -92,9 +94,10 @@ def team_manage(request, slug):
     })
 
 
+@team_required
 @login_required
-def team_join(request, slug):
-    team = get_object_or_404(Team, slug=slug)
+def team_join(request):
+    team = request.team
     state = team.state_for(request.user)
     if team.manager_access == Team.MEMBER_ACCESS_INVITATION and \
        state is None and not request.user.is_staff:
@@ -105,14 +108,13 @@ def team_join(request, slug):
         membership.state = Membership.STATE_MEMBER
         membership.save()
         messages.success(request, "Joined team.")
-        return redirect("team_detail", slug=slug)
-    else:
-        return redirect("team_detail", slug=slug)
+    return redirect("team_detail", slug=team.slug)
 
 
+@team_required
 @login_required
-def team_leave(request, slug):
-    team = get_object_or_404(Team, slug=slug)
+def team_leave(request):
+    team = request.team
     state = team.state_for(request.user)
     if team.manager_access == Team.MEMBER_ACCESS_INVITATION and \
        state is None and not request.user.is_staff:
@@ -124,12 +126,13 @@ def team_leave(request, slug):
         messages.success(request, "Left team.")
         return redirect("dashboard")
     else:
-        return redirect("team_detail", slug=slug)
+        return redirect("team_detail", slug=team.slug)
 
 
+@team_required
 @login_required
-def team_apply(request, slug):
-    team = get_object_or_404(Team, slug=slug)
+def team_apply(request):
+    team = request.team
     state = team.state_for(request.user)
     if team.manager_access == Team.MEMBER_ACCESS_INVITATION and \
        state is None and not request.user.is_staff:
@@ -140,9 +143,7 @@ def team_apply(request, slug):
         membership.state = Membership.STATE_APPLIED
         membership.save()
         messages.success(request, "Applied to join team.")
-        return redirect("team_detail", slug=slug)
-    else:
-        return redirect("team_detail", slug=slug)
+    return redirect("team_detail", slug=team.slug)
 
 
 @login_required
@@ -163,10 +164,11 @@ def team_reject(request, pk):
     return redirect("team_detail", slug=membership.team.slug)
 
 
+@team_required
 @login_required
 @require_POST
-def team_invite(request, slug):
-    team = get_object_or_404(Team, slug=slug)
+def team_invite(request):
+    team = request.team
     role = team.role_for(request.user)
     if role not in [Membership.ROLE_MANAGER, Membership.ROLE_OWNER]:
         raise Http404()
@@ -217,9 +219,10 @@ def team_invite(request, slug):
     return HttpResponse(json.dumps(data), content_type="application/json")
 
 
+@team_required
 @login_required
-def autocomplete_users(request, slug):
-    team = get_object_or_404(Team, slug=slug)
+def autocomplete_users(request):
+    team = request.team
     role = team.role_for(request.user)
     if role not in [Membership.ROLE_MANAGER, Membership.ROLE_OWNER]:
         raise Http404()
