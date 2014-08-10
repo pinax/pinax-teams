@@ -2,7 +2,7 @@ from django.test import TestCase
 
 from django.contrib.auth.models import User
 
-from teams.models import Team, Membership
+from teams.models import Team, Membership, avatar_upload
 
 import teams.receivers  # noqa
 
@@ -24,6 +24,14 @@ class BaseTeamTests(TestCase):
         self.user = User.objects.create_user(username="jtauber")
 
 
+class AvatarUploadTests(TestCase):
+
+    def test_avatar_upload_filename(self):
+        path = avatar_upload(None, "MyHeadshot.png")
+        self.assertTrue(path.startswith("avatars"))
+        self.assertTrue(path.endswith(".png"))
+
+
 class TeamTests(BaseTeamTests):
 
     def test_team_creation(self):
@@ -32,9 +40,17 @@ class TeamTests(BaseTeamTests):
         self.assertEquals(team.slug, "eldarion")
         self.assertEquals(team.creator, self.user)
 
-    def test_team_unicode(self):
+    def test_team_absolute_url(self):
+        team = self._create_team()
+        self.assertTrue(team.slug in team.get_absolute_url())
+
+    def test_team_str(self):
         team = self._create_team()
         self.assertEquals(str(team), "Eldarion")
+
+    def test_team_unicode(self):
+        team = self._create_team()
+        self.assertEquals(unicode(team), "Eldarion")
 
     def test_team_creation_owner_is_member(self):
         team = self._create_team()

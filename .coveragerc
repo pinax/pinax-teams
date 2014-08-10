@@ -1,4 +1,4 @@
 [run]
 source = teams
-omit = teams/tests/*
+omit = teams/tests/*,teams/migrations/*,teams/urls.py,teams/context_urls.py,teams/admin.py
 branch = 1

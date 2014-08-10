@@ -1,7 +1,5 @@
 from django.core.urlresolvers import reverse
 
-from teams.conf import settings
-
 
 class TeamDefaultHookset(object):
 
@@ -15,6 +13,7 @@ class TeamDefaultHookset(object):
 class HookProxy(object):
 
     def __getattr__(self, attr):
+        from teams.conf import settings
         return getattr(settings.TEAMS_HOOKSET, attr)
 
 

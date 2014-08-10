@@ -1,6 +1,7 @@
 import os
 import uuid
 
+from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils import timezone
 
@@ -51,9 +52,8 @@ class Team(models.Model):
     creator = models.ForeignKey(User, related_name="teams_created")
     created = models.DateTimeField(default=timezone.now, editable=False)
 
-    @models.permalink
     def get_absolute_url(self):
-        return ("team_detail", [self.slug])
+        return reverse("team_detail", args=[self.slug])
 
     def __str__(self):
         return self.name
