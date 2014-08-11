@@ -13,7 +13,7 @@ def read(*parts):
 setup(
     author="",
     author_email="",
-    description="",
+    description="An app for Django sites that supports open, by invitation, and by application teams",
     name="pinax-teams",
     long_description=read("README.rst"),
     version=__import__("teams").__version__,
