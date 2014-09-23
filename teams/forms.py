@@ -1,9 +1,28 @@
 from django import forms
+from django.utils.translation import ugettext_lazy as _
 
 from django.contrib.auth.models import User
 
+from account.forms import SignupForm
+
 from .hooks import hookset
 from .models import Membership, Team, create_slug
+
+
+class TeamSignupForm(SignupForm):
+
+    team = forms.CharField(label=_("Team"), max_length=50, required=True)
+
+    def __init__(self, *args, **kwargs):
+        super(TeamSignupForm, self).__init__(*args, **kwargs)
+        self.fields.keyOrder = [
+            "team",
+            "username",
+            "password",
+            "password_confirm",
+            "email",
+            "code"
+        ]
 
 
 class TeamForm(forms.ModelForm):

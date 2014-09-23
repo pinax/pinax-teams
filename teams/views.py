@@ -14,11 +14,29 @@ from django.contrib import messages
 
 from account.decorators import login_required
 from account.mixins import LoginRequiredMixin
+from account.views import SignupView
 
 from .decorators import team_required
-from .forms import TeamInviteUserForm, TeamForm
+from .forms import TeamInviteUserForm, TeamForm, TeamSignupForm
 from .hooks import hookset
 from .models import Team, Membership
+
+
+class TeamSignupView(SignupView):
+
+    template_name = "teams/signup.html"
+
+    def get_form_class(self):
+        if self.signup_code:
+            return self.form_class
+        return TeamSignupForm
+
+    def after_signup(self, form):
+        if not self.signup_code:
+            self.created_user.teams_created.create(
+                name=form.cleaned_data["team"]
+            )
+        super(TeamSignupView, self).after_signup(form)
 
 
 class TeamCreateView(LoginRequiredMixin, CreateView):
