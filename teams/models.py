@@ -141,11 +141,12 @@ class Team(models.Model):
         return membership
 
     def invite_user(self, from_user, to_email, role):
-        invite = JoinInvitation.invite(from_user, to_email)
+        invite = JoinInvitation.invite(from_user, to_email, send=False)
         membership, _ = self.memberships.get_or_create(
             invite=invite,
             defaults={"role": role, "state": Membership.STATE_INVITED}
         )
+        invite.send_invite()
         return membership
 
     def for_user(self, user):
