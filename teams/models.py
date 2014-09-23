@@ -1,3 +1,4 @@
+import datetime
 import os
 import uuid
 
@@ -205,6 +206,15 @@ class Membership(models.Model):
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default=ROLE_MEMBER)
     created = models.DateTimeField(default=timezone.now)
 
+    def is_owner(self):
+        return self.role == Membership.ROLE_OWNER
+
+    def is_manager(self):
+        return self.role == Membership.ROLE_MANAGER
+
+    def is_member(self):
+        return self.role == Membership.ROLE_MEMBER
+
     def promote(self, by):
         role = self.team.role_for(by)
         if role in [Membership.ROLE_MANAGER, Membership.ROLE_OWNER]:
@@ -255,6 +265,19 @@ class Membership(models.Model):
         if self.invite:
             return self.invite.get_status_display()
         return "Unknown"
+
+    def resend_invite(self):
+        if self.invite is not None:
+            code = self.invite.signup_code
+            code.expiry = timezone.now() + datetime.timedelta(days=5)
+            code.save()
+            code.send()
+
+    def remove(self):
+        if self.invite is not None:
+            self.invite.signup_code.delete()
+            self.invite.delete()
+        self.delete()
 
     @property
     def invitee(self):

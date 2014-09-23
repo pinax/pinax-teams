@@ -21,6 +21,11 @@ urlpatterns = patterns(
     # membership specific
     url(r"^(?P<slug>[\w\-]+)/ac/users-to-invite/$", "autocomplete_users", name="team_autocomplete_users"),  # noqa
     url(r"^(?P<slug>[\w\-]+)/invite-user/$", "team_invite", name="team_invite"),
+    url(r"^(?P<slug>[\w\-]+)/members/(?P<pk>\d+)/revoke-invite/$", "team_member_revoke_invite", name="team_member_revoke_invite"),  # noqa
+    url(r"^(?P<slug>[\w\-]+)/members/(?P<pk>\d+)/resend-invite/$", "team_member_resend_invite", name="team_member_resend_invite"),  # noqa
+    url(r"^(?P<slug>[\w\-]+)/members/(?P<pk>\d+)/promote/$", "team_member_promote", name="team_member_promote"),  # noqa
+    url(r"^(?P<slug>[\w\-]+)/members/(?P<pk>\d+)/demote/$", "team_member_demote", name="team_member_demote"),  # noqa
+    url(r"^(?P<slug>[\w\-]+)/members/(?P<pk>\d+)/remove/$", "team_member_remove", name="team_member_remove"),  # noqa
 
     url(r"^accept/(?P<pk>\d+)/$", "team_accept", name="team_accept"),
     url(r"^reject/(?P<pk>\d+)/$", "team_reject", name="team_reject"),

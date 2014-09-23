@@ -16,4 +16,10 @@ urlpatterns = patterns(
     url(r"^manage/$", "team_manage", name="team_manage"),
     url(r"^ac/users-to-invite/$", "autocomplete_users", name="team_autocomplete_users"),  # noqa
     url(r"^invite-user/$", "team_invite", name="team_invite"),
+    url(r"^members/(?P<pk>\d+)/revoke-invite/$", "team_member_revoke_invite", name="team_member_revoke_invite"),  # noqa
+    url(r"^members/(?P<pk>\d+)/resend-invite/$", "team_member_resend_invite", name="team_member_resend_invite"),  # noqa
+    url(r"^members/(?P<pk>\d+)/promote/$", "team_member_promote", name="team_member_promote"),  # noqa
+    url(r"^members/(?P<pk>\d+)/demote/$", "team_member_demote", name="team_member_demote"),  # noqa
+    url(r"^members/(?P<pk>\d+)/remove/$", "team_member_remove", name="team_member_remove"),  # noqa
+
 )

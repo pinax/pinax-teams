@@ -16,7 +16,7 @@ from account.decorators import login_required
 from account.mixins import LoginRequiredMixin
 from account.views import SignupView
 
-from .decorators import team_required
+from .decorators import team_required, manager_required
 from .forms import TeamInviteUserForm, TeamForm, TeamSignupForm
 from .hooks import hookset
 from .models import Team, Membership
@@ -235,6 +235,79 @@ def team_invite(request):
                 "team": team
             }, context_instance=RequestContext(request))
         }
+    return HttpResponse(json.dumps(data), content_type="application/json")
+
+
+@manager_required
+@require_POST
+def team_member_revoke_invite(request, pk):
+    membership = get_object_or_404(request.team.memberships.all(), pk=pk)
+    membership.remove()
+    data = {
+        "html": ""
+    }
+    return HttpResponse(json.dumps(data), content_type="application/json")
+
+
+@manager_required
+@require_POST
+def team_member_resend_invite(request, pk):
+    membership = get_object_or_404(request.team.memberships.all(), pk=pk)
+    membership.resend_invite()
+    data = {
+        "html": render_to_string(
+            "teams/_membership.html",
+            {
+                "membership": membership
+            },
+            context_instance=RequestContext(request)
+        )
+    }
+    return HttpResponse(json.dumps(data), content_type="application/json")
+
+
+@manager_required
+@require_POST
+def team_member_promote(request, pk):
+    membership = get_object_or_404(request.team.memberships.all(), pk=pk)
+    membership.promote(by=request.user)
+    data = {
+        "html": render_to_string(
+            "teams/_membership.html",
+            {
+                "membership": membership
+            },
+            context_instance=RequestContext(request)
+        )
+    }
+    return HttpResponse(json.dumps(data), content_type="application/json")
+
+
+@manager_required
+@require_POST
+def team_member_demote(request, pk):
+    membership = get_object_or_404(request.team.memberships.all(), pk=pk)
+    membership.demote(by=request.user)
+    data = {
+        "html": render_to_string(
+            "teams/_membership.html",
+            {
+                "membership": membership
+            },
+            context_instance=RequestContext(request)
+        )
+    }
+    return HttpResponse(json.dumps(data), content_type="application/json")
+
+
+@manager_required
+@require_POST
+def team_member_remove(request, pk):
+    membership = get_object_or_404(request.team.memberships.all(), pk=pk)
+    membership.remove()
+    data = {
+        "html": ""
+    }
     return HttpResponse(json.dumps(data), content_type="application/json")
 
 
