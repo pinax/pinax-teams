@@ -1,6 +1,5 @@
 import json
 
-from django.db.models import Q
 from django.http import Http404, HttpResponse, HttpResponseRedirect, HttpResponseForbidden
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template import RequestContext
@@ -326,11 +325,6 @@ def autocomplete_users(request):
     if q:
         results.extend([
             hookset.get_autocomplete_result(x)
-            for x in users.filter(
-                Q(email__icontains=q) |
-                Q(username__icontains=q) |
-                Q(first_name__icontains=q) |
-                Q(last_name__icontains=q)
-            )
+            for x in hookset.search_queryset(q, users)
         ])
     return HttpResponse(json.dumps(results), content_type="application/json")

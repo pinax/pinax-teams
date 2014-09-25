@@ -1,3 +1,5 @@
+from django.db.models import Q
+
 from django.core.urlresolvers import reverse
 
 
@@ -8,6 +10,14 @@ class TeamDefaultHookset(object):
 
     def get_autocomplete_result(self, user):
         return {"pk": user.pk, "email": user.email, "name": user.get_full_name()}
+
+    def search_queryset(self, query, users):
+        return users.filter(
+            Q(email__icontains=query) |
+            Q(username__icontains=query) |
+            Q(first_name__icontains=query) |
+            Q(last_name__icontains=query)
+        )
 
 
 class HookProxy(object):
