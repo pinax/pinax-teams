@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 
 from account.forms import SignupForm
 
+from .conf import settings
 from .hooks import hookset
 from .models import Membership, Team, create_slug
 
@@ -31,6 +32,8 @@ class TeamForm(forms.ModelForm):
         slug = create_slug(self.cleaned_data["name"])
         if self.instance.pk is None and Team.objects.filter(slug=slug).exists():
             raise forms.ValidationError("Team with this name already exists")
+        if self.cleaned_data["name"].lower() in settings.TEAM_NAME_BLACKLIST:
+            raise forms.ValidationError("You can not create a team by this name")
         return self.cleaned_data["name"]
 
     class Meta:

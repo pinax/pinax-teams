@@ -23,6 +23,7 @@ class TeamAppConf(AppConf):
 
     PROFILE_MODEL = ""
     HOOKSET = "teams.hooks.TeamDefaultHookset"
+    NAME_BLACKLIST = []
 
     def configure_profile_model(self, value):
         if value:
