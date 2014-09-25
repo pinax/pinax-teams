@@ -49,7 +49,7 @@ class TeamForm(forms.ModelForm):
 
 class TeamInviteUserForm(forms.Form):
 
-    invitee = forms.EmailField(label="Person to invite")
+    invitee = forms.CharField(label="Person to invite")
     role = forms.ChoiceField(choices=Membership.ROLE_CHOICES, widget=forms.RadioSelect)
 
     def clean_invitee(self):
