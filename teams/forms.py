@@ -56,7 +56,10 @@ class TeamInviteUserForm(forms.Form):
         try:
             return User.objects.get(email=self.cleaned_data["invitee"])
         except User.DoesNotExist:
-            return self.cleaned_data["invitee"]
+            try:
+                return User.objects.get(username=self.cleaned_data["invitee"])
+            except User.DoesNotExist:
+                return self.cleaned_data["invitee"]
 
     def __init__(self, *args, **kwargs):
         self.team = kwargs.pop("team")
