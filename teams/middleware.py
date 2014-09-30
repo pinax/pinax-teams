@@ -67,10 +67,8 @@ class WSGITeamMiddleware(object):
 
     def __call__(self, environ, start_repsonse):
         m = re.match(r"(/teams/([\w-]+))(.*)", environ["PATH_INFO"])
-        print "in middleware"
         if m:
             environ["SCRIPT_NAME"] = m.group(1)
             environ["PATH_INFO"] = m.group(3)
             environ["pinax.team"] = m.group(2)
-            print m.group(2)
         return self.app(environ, start_repsonse)
