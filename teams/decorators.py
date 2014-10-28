@@ -19,7 +19,6 @@ def team_required(func=None):
     def decorator(view_func):
         @functools.wraps(view_func, assigned=available_attrs(view_func))
         def _wrapped_view(request, *args, **kwargs):
-            print "Calling manage", args, kwargs, hasattr(request, "team")
             slug = kwargs.pop("slug", None)
             if not getattr(request, "team", None):
                 request.team = get_object_or_404(Team, slug=slug)
