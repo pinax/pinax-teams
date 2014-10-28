@@ -205,8 +205,8 @@ class Membership(models.Model):
     ]
 
     team = models.ForeignKey(Team, related_name="memberships")
-    user = models.ForeignKey(User, related_name="memberships", null=True)
-    invite = models.ForeignKey(JoinInvitation, related_name="memberships", null=True)
+    user = models.ForeignKey(User, related_name="memberships", null=True, blank=True)
+    invite = models.ForeignKey(JoinInvitation, related_name="memberships", null=True, blank=True)
     state = models.CharField(max_length=20, choices=STATE_CHOICES)
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default=ROLE_MEMBER)
     created = models.DateTimeField(default=timezone.now)
