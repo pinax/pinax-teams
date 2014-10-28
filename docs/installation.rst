@@ -12,9 +12,18 @@ Installation
 
     INSTALLED_APPS = (
         # ...
+        "reversion",
+        "account",
+        "kaleo",
         "teams",
         # ...
     )
+
+
+* Add urls:
+
+    # urls.py
+    url(r"^teams/", include("teams.urls")),
 
 
 .. _dependencies:
