@@ -12,10 +12,11 @@ members_count.short_description = "Members Count"
 
 admin.site.register(
     Team,
-    list_display=["name", "member_access", "manager_access", members_count, "creator"],
+    list_display=["name", "parent", "member_access", "manager_access", members_count, "creator"],
     fields=[
         "name",
         "slug",
+        "parent",
         "avatar",
         "description",
         "member_access",
