@@ -16,25 +16,25 @@ setup(
     description="An app for Django sites that supports open, by invitation, and by application teams",
     name="pinax-teams",
     long_description=read("README.rst"),
-    version=__import__("teams").__version__,
+    version="0.6.2",
     url="http://pinax-teams.rtfd.org/",
     license="MIT",
     packages=find_packages(),
     tests_require=[
         "Django>=1.6.5",
-        "django-reversion==1.8.1",
+        "django-reversion>=1.8.1",
         "kaleo==1.5",
         "unicode-slugify==0.1.1",
-        "Pillow==2.3.0",
-        "django-user-accounts==1.0c9"
+        "Pillow>=2.3.0",
+        "django-user-accounts>=1.0"
     ],
     install_requires=[
         "Django>=1.6.5",
-        "django-reversion==1.8.1",
+        "django-reversion>=1.8.1",
         "kaleo==1.5",
         "unicode-slugify==0.1.1",
-        "Pillow==2.3.0",
-        "django-user-accounts==1.0c9"
+        "Pillow>=2.3.0",
+        "django-user-accounts>=1.0"
     ],
     test_suite="runtests.runtests",
     classifiers=[
@@ -45,11 +45,8 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
         "Programming Language :: Python",
-        "Programming Language :: Python :: 2.6",
-        "Programming Language :: Python :: 2.7",
-        "Programming Language :: Python :: 3.2",
-        "Programming Language :: Python :: 3.3",
-        "Topic :: Software Development :: Libraries :: Python Modules",
+        "Programming Language :: Python :: 2",
+        "Programming Language :: Python :: 3",
     ],
     zip_safe=False
 )
