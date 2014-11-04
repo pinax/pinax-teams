@@ -5,6 +5,7 @@ import uuid
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils import timezone
+from django.utils.encoding import python_2_unicode_compatible
 
 from django.contrib.auth.models import User
 
@@ -26,6 +27,7 @@ def create_slug(name):
     return slugify(name)[:50]
 
 
+@python_2_unicode_compatible
 class Team(models.Model):
 
     MEMBER_ACCESS_OPEN = "open"
@@ -60,9 +62,6 @@ class Team(models.Model):
         return reverse("team_detail", args=[self.slug])
 
     def __str__(self):
-        return self.name
-
-    def __unicode__(self):
         return self.name
 
     def can_join(self, user):
@@ -177,6 +176,7 @@ class Team(models.Model):
         super(Team, self).save(*args, **kwargs)
 
 
+@python_2_unicode_compatible
 class Membership(models.Model):
 
     STATE_APPLIED = "applied"
@@ -297,9 +297,6 @@ class Membership(models.Model):
 
     def __str__(self):
         return "{0} in {1}".format(self.user, self.team)
-
-    def __unicode__(self):
-        return u"{0} in {1}".format(self.user, self.team)
 
     class Meta:
         unique_together = [("team", "user", "invite")]
