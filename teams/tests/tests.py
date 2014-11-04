@@ -12,9 +12,9 @@ class BaseTeamTests(TestCase):
     MANAGER_ACCESS = Team.MANAGER_ACCESS_ADD
     MEMBER_ACCESS = Team.MEMBER_ACCESS_OPEN
 
-    def _create_team(self):
+    def _create_team(self, name="Eldarion"):
         return Team.objects.create(
-            name="Eldarion",
+            name=name,
             creator=self.user,
             manager_access=self.MANAGER_ACCESS,
             member_access=self.MEMBER_ACCESS
@@ -39,6 +39,13 @@ class TeamTests(BaseTeamTests):
         self.assertEquals(team.name, "Eldarion")
         self.assertEquals(team.slug, "eldarion")
         self.assertEquals(team.creator, self.user)
+
+    def test_nested_team(self):
+        eldarion = self._create_team()
+        gondor = self._create_team("Gondor")
+        gondor.parent = eldarion
+        gondor.save()
+        self.assertEquals(Team.objects.get(slug="eldarion").children.all()[0].slug, "gondor")
 
     def test_team_absolute_url(self):
         team = self._create_team()

@@ -14,6 +14,7 @@ DEFAULT_SETTINGS = dict(
         "django.contrib.sites",
         "kaleo",
         "account",
+        "reversion",
         "teams",
         "teams.tests"
     ],

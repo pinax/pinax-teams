@@ -48,6 +48,7 @@ class Team(models.Model):
 
     slug = models.SlugField(unique=True)
     name = models.CharField(max_length=100)
+    parent = models.ForeignKey("Team", null=True, blank=True, related_name="children")
     avatar = models.ImageField(upload_to=avatar_upload, blank=True)
     description = models.TextField(blank=True)
     member_access = models.CharField(max_length=20, choices=MEMBER_ACCESS_CHOICES)
