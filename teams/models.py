@@ -150,7 +150,7 @@ class Team(models.Model):
             defaults={"role": role, "state": Membership.STATE_INVITED}
         )
         invite.send_invite()
-        signals.invited_member.send(sender=self, membership=membership)
+        signals.invited_user.send(sender=self, membership=membership)
         return membership
 
     def for_user(self, user):
