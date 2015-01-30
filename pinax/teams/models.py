@@ -143,8 +143,8 @@ class Team(models.Model):
         signals.added_member.send(sender=self, membership=membership)
         return membership
 
-    def invite_user(self, from_user, to_email, role):
-        invite = JoinInvitation.invite(from_user, to_email, send=False)
+    def invite_user(self, from_user, to_email, role, message=None):
+        invite = JoinInvitation.invite(from_user, to_email, message, send=False)
         membership, _ = self.memberships.get_or_create(
             invite=invite,
             defaults={"role": role, "state": Membership.STATE_INVITED}
