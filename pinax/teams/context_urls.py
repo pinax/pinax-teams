@@ -5,7 +5,7 @@ from django.conf.urls import patterns, url
 
 
 urlpatterns = patterns(
-    "teams.views",
+    "pinax.teams.views",
 
     # team specific
     url(r"^detail/$", "team_detail", name="team_detail"),

@@ -14,8 +14,8 @@ DEFAULT_SETTINGS = dict(
         "django.contrib.sites",
         "kaleo",
         "account",
-        "teams",
-        "teams.tests"
+        "pinax.teams",
+        "pinax.teams.tests"
     ],
     DATABASES={
         "default": {
@@ -23,8 +23,9 @@ DEFAULT_SETTINGS = dict(
             "NAME": ":memory:",
         }
     },
+    MIDDLEWARE_CLASSES=[],
     SITE_ID=1,
-    ROOT_URLCONF="teams.tests.urls",
+    ROOT_URLCONF="pinax.teams.tests.urls",
     SECRET_KEY="notasecret",
 )
 
@@ -43,7 +44,7 @@ def runtests(*test_args):
     try:
         from django.test.runner import DiscoverRunner
         runner_class = DiscoverRunner
-        test_args = ["teams.tests"]
+        test_args = ["pinax.teams.tests"]
     except ImportError:
         from django.test.simple import DjangoTestSuiteRunner
         runner_class = DjangoTestSuiteRunner

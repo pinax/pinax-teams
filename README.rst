@@ -23,19 +23,7 @@ Welcome to the documentation for pinax-teams!
 Running the Tests
 ------------------------------------
 
-You can run the tests with via::
+::
 
-    python setup.py test
-
-or::
-
-    make test
-
-or::
-
-    make all
-
-or::
-
-    python runtests.py
-
+    $ pip install detox
+    $ detox

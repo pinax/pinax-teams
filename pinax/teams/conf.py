@@ -22,7 +22,7 @@ def load_path_attr(path):
 class TeamAppConf(AppConf):
 
     PROFILE_MODEL = ""
-    HOOKSET = "teams.hooks.TeamDefaultHookset"
+    HOOKSET = "pinax.teams.hooks.TeamDefaultHookset"
     NAME_BLACKLIST = []
 
     def configure_profile_model(self, value):

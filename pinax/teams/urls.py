@@ -4,7 +4,7 @@ from .views import TeamCreateView, TeamListView
 
 
 urlpatterns = patterns(
-    "teams.views",
+    "pinax.teams.views",
 
     # overall
     url(r"^$", TeamListView.as_view(), name="team_list"),

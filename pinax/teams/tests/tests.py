@@ -2,9 +2,7 @@ from django.test import TestCase
 
 from django.contrib.auth.models import User
 
-from teams.models import Team, Membership, avatar_upload
-
-import teams.receivers  # noqa
+from pinax.teams.models import Team, Membership, avatar_upload
 
 
 class BaseTeamTests(TestCase):

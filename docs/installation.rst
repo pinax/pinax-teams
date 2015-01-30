@@ -15,7 +15,7 @@ Installation
         "reversion",
         "account",
         "kaleo",
-        "teams",
+        "pianx.teams",
         # ...
     )
 
@@ -23,7 +23,7 @@ Installation
 * Add urls:
 
     # urls.py
-    url(r"^teams/", include("teams.urls")),
+    url(r"^teams/", include("pinax.teams.urls")),
 
 
 .. _dependencies:

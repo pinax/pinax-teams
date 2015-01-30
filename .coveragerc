@@ -1,4 +1,7 @@
 [run]
-source = teams
-omit = teams/tests/*,teams/migrations/*,teams/urls.py,teams/context_urls.py,teams/admin.py
+source = pinax
+omit = pinax/teams/tests/*,pinax/teams/migrations/*,pinax/teams/urls.py,pinax/teams/context_urls.py,pinax/teams/admin.py
 branch = 1
+
+[report]
+omit = pinax/teams/tests/*,pinax/teams/migrations/*,pinax/teams/urls.py,pinax/teams/context_urls.py,pinax/teams/admin.py
