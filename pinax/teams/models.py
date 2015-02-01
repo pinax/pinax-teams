@@ -6,10 +6,10 @@ from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils import timezone
 
-from django.contrib.auth.models import User
 
 import reversion
 
+from account.compat import AUTH_USER_MODEL
 from kaleo.models import JoinInvitation
 from slugify import slugify
 
@@ -52,7 +52,7 @@ class Team(models.Model):
     description = models.TextField(blank=True)
     member_access = models.CharField(max_length=20, choices=MEMBER_ACCESS_CHOICES)
     manager_access = models.CharField(max_length=20, choices=MANAGER_ACCESS_CHOICES)
-    creator = models.ForeignKey(User, related_name="teams_created")
+    creator = models.ForeignKey(AUTH_USER_MODEL, related_name="teams_created")
     created = models.DateTimeField(default=timezone.now, editable=False)
 
     def get_absolute_url(self):
@@ -205,7 +205,7 @@ class Membership(models.Model):
     ]
 
     team = models.ForeignKey(Team, related_name="memberships")
-    user = models.ForeignKey(User, related_name="memberships", null=True, blank=True)
+    user = models.ForeignKey(AUTH_USER_MODEL, related_name="memberships", null=True, blank=True)
     invite = models.ForeignKey(JoinInvitation, related_name="memberships", null=True, blank=True)
     state = models.CharField(max_length=20, choices=STATE_CHOICES)
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default=ROLE_MEMBER)
