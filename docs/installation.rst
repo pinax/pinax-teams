@@ -15,7 +15,7 @@ Installation
         "reversion",
         "account",
         "kaleo",
-        "pianx.teams",
+        "pinax.teams",
         # ...
     )
 
