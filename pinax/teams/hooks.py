@@ -23,7 +23,7 @@ class TeamDefaultHookset(object):
 class HookProxy(object):
 
     def __getattr__(self, attr):
-        from teams.conf import settings
+        from pinax.teams.conf import settings
         return getattr(settings.TEAMS_HOOKSET, attr)
 
 
