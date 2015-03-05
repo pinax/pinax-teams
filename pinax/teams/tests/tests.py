@@ -48,10 +48,6 @@ class TeamTests(BaseTeamTests):
         team = self._create_team()
         self.assertEquals(str(team), "Eldarion")
 
-    def test_team_unicode(self):
-        team = self._create_team()
-        self.assertEquals(unicode(team), "Eldarion")
-
     def test_team_creation_owner_is_member(self):
         team = self._create_team()
         team_user = team.memberships.all()[0]
