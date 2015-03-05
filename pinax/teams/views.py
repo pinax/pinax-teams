@@ -14,6 +14,7 @@ from account.compat import get_user_model
 from account.decorators import login_required
 from account.mixins import LoginRequiredMixin
 from account.views import SignupView
+from six import string_types
 
 from .decorators import team_required, manager_required
 from .forms import TeamInviteUserForm, TeamForm, TeamSignupForm
@@ -194,7 +195,7 @@ def team_invite(request):
     if form.is_valid():
         user_or_email = form.cleaned_data["invitee"]
         role = form.cleaned_data["role"]
-        if isinstance(user_or_email, basestring):
+        if isinstance(user_or_email, string_types):
             membership = team.invite_user(request.user, user_or_email, role)
         else:
             membership = team.add_user(user_or_email, role)
