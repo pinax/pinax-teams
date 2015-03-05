@@ -54,12 +54,19 @@ class TeamInviteUserForm(forms.Form):
     def clean_invitee(self):
         User = get_user_model()
         try:
-            return User.objects.get(email=self.cleaned_data["invitee"])
+            invitee = User.objects.get(email=self.cleaned_data["invitee"])
+            if self.team.is_on_team(invitee):
+                raise forms.ValidationError("User already on team.")
         except User.DoesNotExist:
             try:
-                return User.objects.get(username=self.cleaned_data["invitee"])
+                invitee = User.objects.get(username=self.cleaned_data["invitee"])
+                if self.team.is_on_team(invitee):
+                    raise forms.ValidationError("User already on team.")
             except User.DoesNotExist:
-                return self.cleaned_data["invitee"]
+                invitee = self.cleaned_data["invitee"]
+                if self.team.memberships.filter(invite__signup_code__email=invitee).exists():
+                    raise forms.ValidationError("Invite already sent.")
+        return invitee
 
     def __init__(self, *args, **kwargs):
         self.team = kwargs.pop("team")

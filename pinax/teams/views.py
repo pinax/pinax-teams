@@ -198,16 +198,6 @@ def team_invite(request):
             membership = team.invite_user(request.user, user_or_email, role)
         else:
             membership = team.add_user(user_or_email, role)
-        if membership.state == Membership.STATE_APPLIED:
-            fragment_class = ".applicants"
-        elif membership.state == Membership.STATE_INVITED:
-            fragment_class = ".invitees"
-        elif membership.state in (Membership.STATE_AUTO_JOINED, Membership.STATE_ACCEPTED):
-            fragment_class = {
-                Membership.ROLE_OWNER: ".owners",
-                Membership.ROLE_MANAGER: ".managers",
-                Membership.ROLE_MEMBER: ".members"
-            }[membership.role]
         data = {
             "html": render_to_string(
                 "teams/_invite_form.html",
@@ -216,17 +206,30 @@ def team_invite(request):
                     "team": team
                 },
                 context_instance=RequestContext(request)
-            ),
-            "append-fragments": {
-                fragment_class: render_to_string(
-                    "teams/_membership.html",
-                    {
-                        "membership": membership
-                    },
-                    context_instance=RequestContext(request)
-                )
-            }
+            )
         }
+        if membership is not None:
+            if membership.state == Membership.STATE_APPLIED:
+                fragment_class = ".applicants"
+            elif membership.state == Membership.STATE_INVITED:
+                fragment_class = ".invitees"
+            elif membership.state in (Membership.STATE_AUTO_JOINED, Membership.STATE_ACCEPTED):
+                fragment_class = {
+                    Membership.ROLE_OWNER: ".owners",
+                    Membership.ROLE_MANAGER: ".managers",
+                    Membership.ROLE_MEMBER: ".members"
+                }[membership.role]
+            data.update({
+                "append-fragments": {
+                    fragment_class: render_to_string(
+                        "teams/_membership.html",
+                        {
+                            "membership": membership
+                        },
+                        context_instance=RequestContext(request)
+                    )
+                }
+            })
     else:
         data = {
             "html": render_to_string("teams/_invite_form.html", {
