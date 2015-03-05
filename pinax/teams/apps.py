@@ -1,5 +1,9 @@
 from django.apps import AppConfig as BaseAppConfig
-from django.utils.importlib import import_module
+
+try:
+    import importlib
+except ImportError:
+    from django.utils import importlib
 
 
 class AppConfig(BaseAppConfig):
@@ -8,4 +12,4 @@ class AppConfig(BaseAppConfig):
     verbose_name = "Pinax Teams"
 
     def ready(self):
-        import_module("pinax.teams.receivers")
+        importlib.import_module("pinax.teams.receivers")
