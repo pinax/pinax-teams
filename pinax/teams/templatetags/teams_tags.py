@@ -29,7 +29,7 @@ class AvailableTeamsNode(template.Node):
             elif request.user.is_staff and state is None:
                 teams.append(team)
         context[self.context_var] = teams
-        return u""
+        return ""
 
 
 @register.tag
