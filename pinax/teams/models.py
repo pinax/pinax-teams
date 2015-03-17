@@ -288,7 +288,7 @@ class Membership(models.Model):
             self.invite.signup_code.delete()
             self.invite.delete()
         self.delete()
-        signals.removed_membership.send(sender=self, membership=self)
+        signals.removed_membership.send(sender=Membership, team=self.team, user=self.user)
 
     @property
     def invitee(self):
