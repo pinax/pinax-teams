@@ -24,6 +24,17 @@ class TeamAppConf(AppConf):
     PROFILE_MODEL = ""
     HOOKSET = "pinax.teams.hooks.TeamDefaultHookset"
     NAME_BLACKLIST = []
+    MESSAGE_STRINGS = {
+        "joined-team": "Joined team.",
+        "left-team": "Left team.",
+        "applied-to-join": "Applied to join team.",
+        "accepted-application": "Accepted application.",
+        "rejected-application": "Rejected application.",
+        "slug-exists": "Team with this name already exists",
+        "on-team-blacklist": "You can not create a team by this name",
+        "user-member-exists": "User already on team.",
+        "invitee-member-exists": "Invite already sent." 
+    }
 
     def configure_profile_model(self, value):
         if value:
