@@ -16,14 +16,13 @@ from account.mixins import LoginRequiredMixin
 from account.views import SignupView
 from six import string_types
 
-from .conf import settings
 from .decorators import team_required, manager_required
 from .forms import TeamInviteUserForm, TeamForm, TeamSignupForm
 from .hooks import hookset
 from .models import Team, Membership
 
 
-MESSAGE_STRINGS = settings.TEAMS_MESSAGE_STRINGS
+MESSAGE_STRINGS = hookset.get_message_strings()
 
 
 class TeamSignupView(SignupView):

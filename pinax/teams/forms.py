@@ -9,7 +9,7 @@ from .hooks import hookset
 from .models import Membership, Team, create_slug
 
 
-MESSAGE_STRINGS = settings.TEAMS_MESSAGE_STRINGS
+MESSAGE_STRINGS = hookset.get_message_strings()
 
 
 class TeamSignupForm(SignupForm):
