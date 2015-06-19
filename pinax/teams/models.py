@@ -124,8 +124,14 @@ class Team(models.Model):
             user=user
         ).exists()
 
+    def is_member(self, user):
+        return self.members.filter(user=user).exists()
+
     def is_manager(self, user):
         return self.managers.filter(user=user).exists()
+
+    def is_owner(self, user):
+        return self.owners.filter(user=user).exists()
 
     def is_on_team(self, user):
         return self.acceptances.filter(user=user).exists()
