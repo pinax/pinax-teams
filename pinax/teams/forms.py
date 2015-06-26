@@ -1,7 +1,7 @@
 from django import forms
 from django.utils.translation import ugettext_lazy as _
+from django.contrib.auth.models import User
 
-from account.compat import get_user_model
 from account.forms import SignupForm
 
 from .conf import settings
@@ -52,7 +52,6 @@ class TeamInviteUserForm(forms.Form):
     role = forms.ChoiceField(choices=Membership.ROLE_CHOICES, widget=forms.RadioSelect)
 
     def clean_invitee(self):
-        User = get_user_model()
         try:
             invitee = User.objects.get(email=self.cleaned_data["invitee"])
             if self.team.is_on_team(invitee):

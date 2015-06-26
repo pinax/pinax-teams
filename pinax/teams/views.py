@@ -9,8 +9,8 @@ from django.views.generic.edit import CreateView
 from django.views.generic import ListView
 
 from django.contrib import messages
+from django.contrib.auth.models import User
 
-from account.compat import get_user_model
 from account.decorators import login_required
 from account.mixins import LoginRequiredMixin
 from account.views import SignupView
@@ -317,7 +317,6 @@ def team_member_remove(request, pk):
 @team_required
 @login_required
 def autocomplete_users(request):
-    User = get_user_model()
     team = request.team
     role = team.role_for(request.user)
     if role not in [Membership.ROLE_MANAGER, Membership.ROLE_OWNER]:
