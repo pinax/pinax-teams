@@ -1,4 +1,5 @@
 from django.apps import AppConfig as BaseAppConfig
+from django.utils.translation import ugettext_lazy as _
 
 try:
     import importlib
@@ -9,7 +10,7 @@ except ImportError:
 class AppConfig(BaseAppConfig):
 
     name = "pinax.teams"
-    verbose_name = "Pinax Teams"
+    verbose_name = _("Pinax Teams")
 
     def ready(self):
         importlib.import_module("pinax.teams.receivers")

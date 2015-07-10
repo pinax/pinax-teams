@@ -6,6 +6,7 @@ from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
+from django.utils.translation import ugettext_lazy as _
 
 import reversion
 
@@ -37,24 +38,24 @@ class Team(models.Model):
     MANAGER_ACCESS_INVITE = "invite someone"
 
     MEMBER_ACCESS_CHOICES = [
-        (MEMBER_ACCESS_OPEN, "open"),
-        (MEMBER_ACCESS_APPLICATION, "by application"),
-        (MEMBER_ACCESS_INVITATION, "by invitation")
+        (MEMBER_ACCESS_OPEN, _("open")),
+        (MEMBER_ACCESS_APPLICATION, _("by application")),
+        (MEMBER_ACCESS_INVITATION, _("by invitation"))
     ]
 
     MANAGER_ACCESS_CHOICES = [
-        (MANAGER_ACCESS_ADD, "add someone"),
-        (MANAGER_ACCESS_INVITE, "invite someone")
+        (MANAGER_ACCESS_ADD, _("add someone")),
+        (MANAGER_ACCESS_INVITE, _("invite someone"))
     ]
 
     slug = models.SlugField(unique=True)
-    name = models.CharField(max_length=100)
-    avatar = models.ImageField(upload_to=avatar_upload, blank=True)
-    description = models.TextField(blank=True)
-    member_access = models.CharField(max_length=20, choices=MEMBER_ACCESS_CHOICES)
-    manager_access = models.CharField(max_length=20, choices=MANAGER_ACCESS_CHOICES)
-    creator = models.ForeignKey(AUTH_USER_MODEL, related_name="teams_created")
-    created = models.DateTimeField(default=timezone.now, editable=False)
+    name = models.CharField(max_length=100, verbose_name=_("name"))
+    avatar = models.ImageField(upload_to=avatar_upload, blank=True, verbose_name=_("avatar"))
+    description = models.TextField(blank=True, verbose_name=_("description"))
+    member_access = models.CharField(max_length=20, choices=MEMBER_ACCESS_CHOICES, verbose_name=_("member access"))
+    manager_access = models.CharField(max_length=20, choices=MANAGER_ACCESS_CHOICES, verbose_name=_("manager access"))
+    creator = models.ForeignKey(AUTH_USER_MODEL, related_name="teams_created", verbose_name=_("creator"))
+    created = models.DateTimeField(default=timezone.now, editable=False, verbose_name=_("created"))
 
     def get_absolute_url(self):
         return reverse("team_detail", args=[self.slug])
@@ -180,6 +181,10 @@ class Team(models.Model):
         self.full_clean()
         super(Team, self).save(*args, **kwargs)
 
+    class Meta:
+        verbose_name = _("Team")
+        verbose_name_plural = _("Teams")
+
 
 @python_2_unicode_compatible
 class Membership(models.Model):
@@ -196,26 +201,26 @@ class Membership(models.Model):
     ROLE_OWNER = "owner"
 
     STATE_CHOICES = [
-        (STATE_APPLIED, "applied"),
-        (STATE_INVITED, "invited"),
-        (STATE_DECLINED, "declined"),
-        (STATE_REJECTED, "rejected"),
-        (STATE_ACCEPTED, "accepted"),
-        (STATE_AUTO_JOINED, "auto joined")
+        (STATE_APPLIED, _("applied")),
+        (STATE_INVITED, _("invited")),
+        (STATE_DECLINED, _("declined")),
+        (STATE_REJECTED, _("rejected")),
+        (STATE_ACCEPTED, _("accepted")),
+        (STATE_AUTO_JOINED, _("auto joined"))
     ]
 
     ROLE_CHOICES = [
-        (ROLE_MEMBER, "member"),
-        (ROLE_MANAGER, "manager"),
-        (ROLE_OWNER, "owner")
+        (ROLE_MEMBER, _("member")),
+        (ROLE_MANAGER, _("manager")),
+        (ROLE_OWNER, _("owner"))
     ]
 
-    team = models.ForeignKey(Team, related_name="memberships")
-    user = models.ForeignKey(AUTH_USER_MODEL, related_name="memberships", null=True, blank=True)
-    invite = models.ForeignKey(JoinInvitation, related_name="memberships", null=True, blank=True)
-    state = models.CharField(max_length=20, choices=STATE_CHOICES)
-    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default=ROLE_MEMBER)
-    created = models.DateTimeField(default=timezone.now)
+    team = models.ForeignKey(Team, related_name="memberships", verbose_name=_("team"))
+    user = models.ForeignKey(AUTH_USER_MODEL, related_name="memberships", null=True, blank=True, verbose_name=_("user"))
+    invite = models.ForeignKey(JoinInvitation, related_name="memberships", null=True, blank=True, verbose_name=_("invite"))
+    state = models.CharField(max_length=20, choices=STATE_CHOICES, verbose_name=_("state"))
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default=ROLE_MEMBER, verbose_name=_("role"))
+    created = models.DateTimeField(default=timezone.now, verbose_name=_("created"))
 
     def is_owner(self):
         return self.role == Membership.ROLE_OWNER
@@ -305,6 +310,8 @@ class Membership(models.Model):
 
     class Meta:
         unique_together = [("team", "user", "invite")]
+        verbose_name = _("Team")
+        verbose_name_plural = _("Teams")
 
 
 reversion.register(Membership)
