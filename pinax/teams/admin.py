@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.utils.translation import ugettext_lazy as _
 
 import reversion
 
@@ -7,7 +8,7 @@ from .models import Team, Membership
 
 def members_count(obj):
     return obj.memberships.count()
-members_count.short_description = "Members Count"
+members_count.short_description = _("Members Count")
 
 
 admin.site.register(
