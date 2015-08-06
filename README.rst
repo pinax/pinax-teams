@@ -1,7 +1,8 @@
 pinax-teams
 ========================
 
-[![Join us on Slack](http://slack.pinaxproject.com/badge.svg)](http://slack.pinaxproject.com/)
+.. image:: http://slack.pinaxproject.com/badge.svg
+   :target: http://slack.pinaxproject.com/
 
 .. image:: https://img.shields.io/travis/pinax/pinax-teams.svg
     :target: https://travis-ci.org/pinax/pinax-teams
