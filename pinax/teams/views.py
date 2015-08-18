@@ -118,15 +118,18 @@ def team_manage(request):
 def team_join(request):
     team = request.team
     state = team.state_for(request.user)
+
     if team.manager_access == Team.MEMBER_ACCESS_INVITATION and \
        state is None and not request.user.is_staff:
         raise Http404()
 
     if team.can_join(request.user) and request.method == "POST":
         membership, created = Membership.objects.get_or_create(team=team, user=request.user)
-        membership.state = Membership.STATE_MEMBER
+        membership.role = Membership.ROLE_MEMBER
+        membership.state = Membership.STATE_AUTO_JOINED
         membership.save()
         messages.success(request, "Joined team.")
+
     return redirect("team_detail", slug=team.slug)
 
 
