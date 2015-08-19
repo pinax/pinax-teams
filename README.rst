@@ -20,7 +20,7 @@ pinax-teams
     :target:  https://pypi.python.org/pypi/pinax-teams/
 
 
-Pinax-teams is an app for Django sites that supports open, by invitation, and by application teams.
+pinax-teams is an app for Django sites that supports open, by invitation, and by application teams.
 
 Pinax is an open-source platform built on the Django Web Framework. It is an ecosystem of reusable Django apps, themes, and starter project templates. 
 This collection can be found at http://pinaxproject.com.
