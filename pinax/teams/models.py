@@ -2,6 +2,7 @@ import datetime
 import os
 import uuid
 
+from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils import timezone
@@ -10,7 +11,6 @@ from django.utils.translation import ugettext_lazy as _
 
 import reversion
 
-from account.compat import AUTH_USER_MODEL
 from kaleo.models import JoinInvitation
 from slugify import slugify
 
@@ -47,6 +47,8 @@ class Team(models.Model):
         (MANAGER_ACCESS_ADD, _("add someone")),
         (MANAGER_ACCESS_INVITE, _("invite someone"))
     ]
+
+    AUTH_USER_MODEL = getattr(settings, "AUTH_USER_MODEL", "auth.User")
 
     slug = models.SlugField(unique=True)
     name = models.CharField(max_length=100, verbose_name=_("name"))
