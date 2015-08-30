@@ -10,7 +10,7 @@ from django.utils.translation import ugettext_lazy as _
 
 import reversion
 
-from account.compat import AUTH_USER_MODEL
+from account.conf import settings
 from kaleo.models import JoinInvitation
 from slugify import slugify
 
@@ -54,7 +54,7 @@ class Team(models.Model):
     description = models.TextField(blank=True, verbose_name=_("description"))
     member_access = models.CharField(max_length=20, choices=MEMBER_ACCESS_CHOICES, verbose_name=_("member access"))
     manager_access = models.CharField(max_length=20, choices=MANAGER_ACCESS_CHOICES, verbose_name=_("manager access"))
-    creator = models.ForeignKey(AUTH_USER_MODEL, related_name="teams_created", verbose_name=_("creator"))
+    creator = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="teams_created", verbose_name=_("creator"))
     created = models.DateTimeField(default=timezone.now, editable=False, verbose_name=_("created"))
 
     def get_absolute_url(self):
@@ -216,7 +216,7 @@ class Membership(models.Model):
     ]
 
     team = models.ForeignKey(Team, related_name="memberships", verbose_name=_("team"))
-    user = models.ForeignKey(AUTH_USER_MODEL, related_name="memberships", null=True, blank=True, verbose_name=_("user"))
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="memberships", null=True, blank=True, verbose_name=_("user"))
     invite = models.ForeignKey(JoinInvitation, related_name="memberships", null=True, blank=True, verbose_name=_("invite"))
     state = models.CharField(max_length=20, choices=STATE_CHOICES, verbose_name=_("state"))
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default=ROLE_MEMBER, verbose_name=_("role"))
