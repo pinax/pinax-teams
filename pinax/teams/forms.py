@@ -1,7 +1,7 @@
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 
-rom django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model
 
 from account.forms import SignupForm
 
