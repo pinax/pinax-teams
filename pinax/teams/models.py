@@ -148,7 +148,7 @@ class Team(models.Model):
         
         membership, created = Membership.objects.get_or_create(
             team=self,
-            user=request.user,
+            user=user,
             defaults={"role": role, "state": state},
         )
         return membership
