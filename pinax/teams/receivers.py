@@ -1,7 +1,7 @@
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 
-from kaleo.signals import invite_accepted, joined_independently
+from pinax.invitations.signals import invite_accepted, joined_independently
 
 from .models import Team, Membership
 
