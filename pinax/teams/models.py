@@ -138,6 +138,14 @@ class Team(models.Model):
     def is_on_team(self, user):
         return self.acceptances.filter(user=user).exists()
 
+    def add_member(self, user, role=Membership.ROLE_MEMBER, state=Membership.STATE_AUTO_JOINED):
+        membership, created = Membership.objects.get_or_create(
+            team=self,
+            user=request.user,
+            defaults={"role": role, "state": state},
+        )
+        return membership
+
     def add_user(self, user, role):
         state = Membership.STATE_AUTO_JOINED
         if self.manager_access == Team.MANAGER_ACCESS_INVITE:
