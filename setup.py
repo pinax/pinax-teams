@@ -16,7 +16,7 @@ setup(
     description="An app for Django sites that supports open, by invitation, and by application teams",
     name="pinax-teams",
     long_description=read("README.rst"),
-    version="0.7.4",
+    version="0.8.0.dev1",
     url="http://pinax-teams.rtfd.org/",
     license="MIT",
     packages=find_packages(),
