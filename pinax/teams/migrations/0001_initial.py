@@ -33,7 +33,7 @@ class Migration(SchemaMigration):
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('team', self.gf('django.db.models.fields.related.ForeignKey')(related_name='memberships', to=orm['teams.Team'])),
             ('user', self.gf('django.db.models.fields.related.ForeignKey')(related_name='memberships', null=True, to=orm['auth.User'])),
-            ('invite', self.gf('django.db.models.fields.related.ForeignKey')(related_name='memberships', null=True, to=orm['kaleo.JoinInvitation'])),
+            ('invite', self.gf('django.db.models.fields.related.ForeignKey')(related_name='memberships', null=True, to=orm['invitations.JoinInvitation'])),
             ('state', self.gf('django.db.models.fields.CharField')(max_length=20)),
             ('role', self.gf('django.db.models.fields.CharField')(default='member', max_length=20)),
             ('created', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime.now)),
@@ -104,7 +104,7 @@ class Migration(SchemaMigration):
             'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
-        'kaleo.joininvitation': {
+        'invitations.joininvitation': {
             'Meta': {'object_name': 'JoinInvitation'},
             'from_user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'invites_sent'", 'to': u"orm['auth.User']"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
@@ -118,7 +118,7 @@ class Migration(SchemaMigration):
             'Meta': {'unique_together': "[('team', 'user', 'invite')]", 'object_name': 'Membership'},
             'created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'invite': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'memberships'", 'null': 'True', 'to': u"orm['kaleo.JoinInvitation']"}),
+            'invite': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'memberships'", 'null': 'True', 'to': u"orm['invitations.JoinInvitation']"}),
             'role': ('django.db.models.fields.CharField', [], {'default': "'member'", 'max_length': '20'}),
             'state': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
             'team': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'memberships'", 'to': u"orm['teams.Team']"}),

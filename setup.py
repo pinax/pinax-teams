@@ -23,7 +23,7 @@ setup(
     tests_require=[
         "Django>=1.6.5",
         "django-reversion>=1.8.1",
-        "kaleo>=1.5",
+        "pinax-invitations>=2.1.1",
         "unicode-slugify>=0.1.1",
         "Pillow>=2.3.0",
         "django-user-accounts>=1.0",
@@ -32,7 +32,7 @@ setup(
     install_requires=[
         "Django>=1.6.5",
         "django-reversion>=1.8.1",
-        "kaleo>=1.5",
+        "pinax-invitations>=2.1.1",
         "unicode-slugify>=0.1.1",
         "Pillow>=2.3.0",
         "django-user-accounts>=1.0",

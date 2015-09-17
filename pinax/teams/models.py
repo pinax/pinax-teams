@@ -11,7 +11,7 @@ from django.utils.translation import ugettext_lazy as _
 import reversion
 
 from account.conf import settings
-from kaleo.models import JoinInvitation
+from pinax.invitations.models import JoinInvitation
 from slugify import slugify
 
 from . import signals
