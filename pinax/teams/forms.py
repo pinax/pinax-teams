@@ -34,7 +34,7 @@ class TeamForm(forms.ModelForm):
     def clean_name(self):
         slug = create_slug(self.cleaned_data["name"])
         if self.instance.pk is None and Team.objects.filter(slug=slug).exists():
-            raise forms.ValidationError(MESSAGE_STRINGS["slug-exists")
+            raise forms.ValidationError(MESSAGE_STRINGS["slug-exists"])
         if self.cleaned_data["name"].lower() in settings.TEAM_NAME_BLACKLIST:
             raise forms.ValidationError(MESSAGE_STRINGS["on-team-blacklist"])
         return self.cleaned_data["name"]
