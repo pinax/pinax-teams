@@ -21,21 +21,21 @@ setup(
     license="MIT",
     packages=find_packages(),
     tests_require=[
-        "Django>=1.6.5",
+        "Django>=1.7.10",
         "django-reversion>=1.8.1",
-        "kaleo>=1.5",
         "unicode-slugify>=0.1.1",
         "Pillow>=2.3.0",
-        "django-user-accounts>=1.0",
+        "django-user-accounts>=1.2",
+        "pinax-invitations>=2.1",
         "six>=1.9.0"
     ],
     install_requires=[
-        "Django>=1.6.5",
+        "Django>=1.7.10",
         "django-reversion>=1.8.1",
-        "kaleo>=1.5",
         "unicode-slugify>=0.1.1",
         "Pillow>=2.3.0",
-        "django-user-accounts>=1.0",
+        "django-user-accounts>=1.2",
+        "pinax-invitations>=2.1",
         "six>=1.9.0"
     ],
     test_suite="runtests.runtests",
