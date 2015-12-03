@@ -8,7 +8,7 @@ from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
-import reversion
+from reversion import revisions as reversion
 
 from account.conf import settings
 from kaleo.models import JoinInvitation

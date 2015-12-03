@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
 
-import reversion
+from reversion.admin import VersionAdmin
 
 from .models import Team, Membership
 
@@ -28,7 +28,7 @@ admin.site.register(
 )
 
 
-class MembershipAdmin(reversion.VersionAdmin):
+class MembershipAdmin(VersionAdmin):
     raw_id_fields = ["user"]
     list_display = ["team", "user", "state", "role"]
     list_filter = ["team"]
