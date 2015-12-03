@@ -22,6 +22,9 @@ from .hooks import hookset
 from .models import Team, Membership
 
 
+MESSAGE_STRINGS = hookset.get_message_strings()
+
+
 class TeamSignupView(SignupView):
 
     template_name = "teams/signup.html"
@@ -126,7 +129,7 @@ def team_join(request):
         membership, created = Membership.objects.get_or_create(team=team, user=request.user)
         membership.state = Membership.STATE_MEMBER
         membership.save()
-        messages.success(request, "Joined team.")
+        messages.success(request, MESSAGE_STRINGS["joined-team"])
     return redirect("team_detail", slug=team.slug)
 
 
@@ -142,7 +145,7 @@ def team_leave(request):
     if team.can_leave(request.user) and request.method == "POST":
         membership = Membership.objects.get(team=team, user=request.user)
         membership.delete()
-        messages.success(request, "Left team.")
+        messages.success(request, MESSAGE_STRINGS["left-team"])
         return redirect("dashboard")
     else:
         return redirect("team_detail", slug=team.slug)
@@ -161,7 +164,7 @@ def team_apply(request):
         membership, created = Membership.objects.get_or_create(team=team, user=request.user)
         membership.state = Membership.STATE_APPLIED
         membership.save()
-        messages.success(request, "Applied to join team.")
+        messages.success(request, MESSAGE_STRINGS["applied-to-join"])
     return redirect("team_detail", slug=team.slug)
 
 
@@ -170,7 +173,7 @@ def team_apply(request):
 def team_accept(request, pk):
     membership = get_object_or_404(Membership, pk=pk)
     if membership.accept(by=request.user):
-        messages.success(request, "Accepted application.")
+        messages.success(request, MESSAGE_STRINGS["accepted-application"])
     return redirect("team_detail", slug=membership.team.slug)
 
 
@@ -179,7 +182,7 @@ def team_accept(request, pk):
 def team_reject(request, pk):
     membership = get_object_or_404(Membership, pk=pk)
     if membership.reject(by=request.user):
-        messages.success(request, "Rejected application.")
+        messages.success(request, MESSAGE_STRINGS["rejected-application"])
     return redirect("team_detail", slug=membership.team.slug)
 
 
