@@ -12,8 +12,8 @@ DEFAULT_SETTINGS = dict(
         "django.contrib.auth",
         "django.contrib.contenttypes",
         "django.contrib.sites",
-        "kaleo",
         "account",
+        "pinax.invitations",
         "pinax.teams",
         "pinax.teams.tests"
     ],
