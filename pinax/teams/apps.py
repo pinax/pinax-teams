@@ -10,6 +10,7 @@ except ImportError:
 class AppConfig(BaseAppConfig):
 
     name = "pinax.teams"
+    label = "pinax_teams"
     verbose_name = _("Pinax Teams")
 
     def ready(self):
