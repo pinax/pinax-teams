@@ -43,7 +43,6 @@ def run(*args):
 
     parent = os.path.dirname(os.path.abspath(__file__))
     sys.path.insert(0, parent)
-    print settings.INSTALLED_APPS
 
     django.core.management.call_command(
         "makemigrations",
