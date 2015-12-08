@@ -25,6 +25,7 @@ class TeamAppConf(AppConf):
     HOOKSET = "pinax.teams.hooks.TeamDefaultHookset"
     NAME_BLACKLIST = []
 
+
     def configure_profile_model(self, value):
         if value:
             return load_path_attr(value)

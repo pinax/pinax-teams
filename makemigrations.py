@@ -27,14 +27,11 @@ DEFAULT_SETTINGS = dict(
         "django.contrib.contenttypes",
         "django.contrib.sessions",
         "django.contrib.sites",
-        "django_forms_bootstrap",
-        "jsonfield",
+        "account",
+        "pinax.invitations",
         "pinax.teams",
     ],
     SITE_ID=1,
-    PINAX_TEAMS_PROFILE_MODEL = "",
-    PINAX_TEAMS_NAME_BLACKLIST=[],
-    PINAX_TEAMS_HOOKSET="pinax.teams.hooks.TeamDefaultHookset"
 )
 
 
@@ -46,6 +43,7 @@ def run(*args):
 
     parent = os.path.dirname(os.path.abspath(__file__))
     sys.path.insert(0, parent)
+    print settings.INSTALLED_APPS
 
     django.core.management.call_command(
         "makemigrations",
