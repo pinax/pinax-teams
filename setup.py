@@ -26,7 +26,7 @@ setup(
         "pinax-invitations>=2.1.1",
         "unicode-slugify>=0.1.1",
         "Pillow>=2.3.0",
-        "django-user-accounts>=1.2",
+        "django-user-accounts>=1.3",
         "six>=1.9.0"
     ],
     install_requires=[
@@ -35,7 +35,7 @@ setup(
         "pinax-invitations>=2.1.1",
         "unicode-slugify>=0.1.1",
         "Pillow>=2.3.0",
-        "django-user-accounts>=1.2",
+        "django-user-accounts>=1.3",
         "six>=1.9.0"
     ],
     test_suite="runtests.runtests",
