@@ -3,6 +3,19 @@ from django.db.models import Q
 from django.core.urlresolvers import reverse
 
 
+MESSAGE_STRINGS = {
+    "joined-team": "Joined team.",
+    "left-team": "Left team.",
+    "applied-to-join": "Applied to join team.",
+    "accepted-application": "Accepted application.",
+    "rejected-application": "Rejected application.",
+    "slug-exists": "Team with this name already exists",
+    "on-team-blacklist": "You can not create a team by this name",
+    "user-member-exists": "User already on team.",
+    "invitee-member-exists": "Invite already sent.",
+}
+
+
 class TeamDefaultHookset(object):
 
     def build_team_url(self, url_name, team_slug):
@@ -18,6 +31,9 @@ class TeamDefaultHookset(object):
             Q(first_name__icontains=query) |
             Q(last_name__icontains=query)
         )
+
+    def get_message_strings(self):
+        return MESSAGE_STRINGS
 
 
 class HookProxy(object):

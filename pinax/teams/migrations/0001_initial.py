@@ -1,141 +1,68 @@
+# -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-# -*- coding: utf-8 -*-
-from south.utils import datetime_utils as datetime
-from south.db import db
-from south.v2 import SchemaMigration
-from django.db import models
+from django.db import models, migrations
+import pinax.teams.models
+import django.utils.timezone
+from django.conf import settings
 
 
-class Migration(SchemaMigration):
+class Migration(migrations.Migration):
 
-    depends_on = (
-        ("reversion", "0007_auto__del_field_version_type"),
-    )
+    dependencies = [
+        ('invitations', '0001_initial'),
+        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+    ]
 
-    def forwards(self, orm):
-        # Adding model 'Team'
-        db.create_table('teams_team', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('slug', self.gf('django.db.models.fields.SlugField')(unique=True, max_length=50)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
-            ('avatar', self.gf('django.db.models.fields.files.ImageField')(max_length=100, blank=True)),
-            ('description', self.gf('django.db.models.fields.TextField')(blank=True)),
-            ('member_access', self.gf('django.db.models.fields.CharField')(max_length=20)),
-            ('manager_access', self.gf('django.db.models.fields.CharField')(max_length=20)),
-            ('creator', self.gf('django.db.models.fields.related.ForeignKey')(related_name='teams_created', to=orm['auth.User'])),
-            ('created', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime.now)),
-        ))
-        db.send_create_signal('teams', ['Team'])
-
-        # Adding model 'Membership'
-        db.create_table('teams_membership', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('team', self.gf('django.db.models.fields.related.ForeignKey')(related_name='memberships', to=orm['teams.Team'])),
-            ('user', self.gf('django.db.models.fields.related.ForeignKey')(related_name='memberships', null=True, to=orm['auth.User'])),
-            ('invite', self.gf('django.db.models.fields.related.ForeignKey')(related_name='memberships', null=True, to=orm['kaleo.JoinInvitation'])),
-            ('state', self.gf('django.db.models.fields.CharField')(max_length=20)),
-            ('role', self.gf('django.db.models.fields.CharField')(default='member', max_length=20)),
-            ('created', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime.now)),
-        ))
-        db.send_create_signal('teams', ['Membership'])
-
-        # Adding unique constraint on 'Membership', fields ['team', 'user', 'invite']
-        db.create_unique('teams_membership', ['team_id', 'user_id', 'invite_id'])
-
-
-    def backwards(self, orm):
-        # Removing unique constraint on 'Membership', fields ['team', 'user', 'invite']
-        db.delete_unique('teams_membership', ['team_id', 'user_id', 'invite_id'])
-
-        # Deleting model 'Team'
-        db.delete_table('teams_team')
-
-        # Deleting model 'Membership'
-        db.delete_table('teams_membership')
-
-    models = {
-        'account.signupcode': {
-            'Meta': {'object_name': 'SignupCode'},
-            'code': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '64'}),
-            'created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
-            'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
-            'expiry': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'inviter': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']", 'null': 'True', 'blank': 'True'}),
-            'max_uses': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
-            'notes': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-            'sent': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
-            'use_count': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'})
-        },
-        'auth.group': {
-            'Meta': {'object_name': 'Group'},
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '80'}),
-            'permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['auth.Permission']", 'symmetrical': 'False', 'blank': 'True'})
-        },
-        'auth.permission': {
-            'Meta': {'ordering': "('content_type__app_label', 'content_type__model', 'codename')", 'unique_together': "(('content_type', 'codename'),)", 'object_name': 'Permission'},
-            'codename': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'content_type': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['contenttypes.ContentType']"}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
-        },
-        'auth.user': {
-            'Meta': {'object_name': 'User'},
-            'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
-            'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
-            'first_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
-            'groups': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "'user_set'", 'blank': 'True', 'to': u"orm['auth.Group']"}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'is_active': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
-            'is_staff': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'is_superuser': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
-            'last_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
-            'password': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
-            'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "'user_set'", 'blank': 'True', 'to': u"orm['auth.Permission']"}),
-            'username': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '30'})
-        },
-        'contenttypes.contenttype': {
-            'Meta': {'ordering': "('name',)", 'unique_together': "(('app_label', 'model'),)", 'object_name': 'ContentType', 'db_table': "'django_content_type'"},
-            'app_label': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
-        },
-        'kaleo.joininvitation': {
-            'Meta': {'object_name': 'JoinInvitation'},
-            'from_user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'invites_sent'", 'to': u"orm['auth.User']"}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'message': ('django.db.models.fields.TextField', [], {'null': 'True'}),
-            'sent': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
-            'signup_code': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['account.SignupCode']", 'unique': 'True'}),
-            'status': ('django.db.models.fields.IntegerField', [], {}),
-            'to_user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'invites_received'", 'null': 'True', 'to': u"orm['auth.User']"})
-        },
-        'teams.membership': {
-            'Meta': {'unique_together': "[('team', 'user', 'invite')]", 'object_name': 'Membership'},
-            'created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'invite': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'memberships'", 'null': 'True', 'to': u"orm['kaleo.JoinInvitation']"}),
-            'role': ('django.db.models.fields.CharField', [], {'default': "'member'", 'max_length': '20'}),
-            'state': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
-            'team': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'memberships'", 'to': u"orm['teams.Team']"}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'memberships'", 'null': 'True', 'to': u"orm['auth.User']"})
-        },
-        'teams.team': {
-            'Meta': {'object_name': 'Team'},
-            'avatar': ('django.db.models.fields.files.ImageField', [], {'max_length': '100', 'blank': 'True'}),
-            'created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
-            'creator': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'teams_created'", 'to': u"orm['auth.User']"}),
-            'description': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'manager_access': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
-            'member_access': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'slug': ('django.db.models.fields.SlugField', [], {'unique': 'True', 'max_length': '50'})
-        }
-    }
-
-    complete_apps = ['teams']
+    operations = [
+        migrations.CreateModel(
+            name='Membership',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('state', models.CharField(max_length=20, verbose_name='state', choices=[(b'applied', 'applied'), (b'invited', 'invited'), (b'declined', 'declined'), (b'rejected', 'rejected'), (b'accepted', 'accepted'), (b'auto-joined', 'auto joined')])),
+                ('role', models.CharField(default=b'member', max_length=20, verbose_name='role', choices=[(b'member', 'member'), (b'manager', 'manager'), (b'owner', 'owner')])),
+                ('created', models.DateTimeField(default=django.utils.timezone.now, verbose_name='created')),
+                ('invite', models.ForeignKey(related_name=b'memberships', verbose_name='invite', blank=True, to='invitations.JoinInvitation', null=True)),
+            ],
+            options={
+                'verbose_name': 'Team',
+                'verbose_name_plural': 'Teams',
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='Team',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('slug', models.SlugField(unique=True)),
+                ('name', models.CharField(max_length=100, verbose_name='name')),
+                ('avatar', models.ImageField(upload_to=pinax.teams.models.avatar_upload, verbose_name='avatar', blank=True)),
+                ('description', models.TextField(verbose_name='description', blank=True)),
+                ('member_access', models.CharField(max_length=20, verbose_name='member access', choices=[(b'open', 'open'), (b'application', 'by application'), (b'invitation', 'by invitation')])),
+                ('manager_access', models.CharField(max_length=20, verbose_name='manager access', choices=[(b'add someone', 'add someone'), (b'invite someone', 'invite someone')])),
+                ('created', models.DateTimeField(default=django.utils.timezone.now, verbose_name='created', editable=False)),
+                ('creator', models.ForeignKey(related_name=b'teams_created', verbose_name='creator', to=settings.AUTH_USER_MODEL)),
+            ],
+            options={
+                'verbose_name': 'Team',
+                'verbose_name_plural': 'Teams',
+            },
+            bases=(models.Model,),
+        ),
+        migrations.AddField(
+            model_name='membership',
+            name='team',
+            field=models.ForeignKey(related_name=b'memberships', verbose_name='team', to='pinax_teams.Team'),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='membership',
+            name='user',
+            field=models.ForeignKey(related_name=b'memberships', verbose_name='user', blank=True, to=settings.AUTH_USER_MODEL, null=True),
+            preserve_default=True,
+        ),
+        migrations.AlterUniqueTogether(
+            name='membership',
+            unique_together=set([('team', 'user', 'invite')]),
+        ),
+    ]

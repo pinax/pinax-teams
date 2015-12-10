@@ -14,7 +14,7 @@ Installation
         # ...
         "reversion",
         "account",
-        "kaleo",
+        "pinax.invitations",
         "pinax.teams",
         # ...
     )
@@ -30,4 +30,3 @@ Installation
 
 Dependencies
 ============
-

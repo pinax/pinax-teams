@@ -1,6 +1,7 @@
+import importlib
+
 from django.conf import settings  # noqa
 from django.core.exceptions import ImproperlyConfigured
-from django.utils import importlib
 
 from appconf import AppConf
 
