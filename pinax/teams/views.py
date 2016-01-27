@@ -26,8 +26,7 @@ MESSAGE_STRINGS = hookset.get_message_strings()
 
 
 class TeamSignupView(SignupView):
-
-    template_name = "teams/signup.html"
+    template_name = "pinax/teams/signup.html"
 
     def get_form_class(self):
         if self.signup_code:
@@ -43,7 +42,7 @@ class TeamSignupView(SignupView):
 
 
 class TeamCreateView(LoginRequiredMixin, CreateView):
-
+    template_name = "pinax/teams/team_form.html"
     form_class = TeamForm
     model = Team
 
@@ -55,7 +54,7 @@ class TeamCreateView(LoginRequiredMixin, CreateView):
 
 
 class TeamListView(ListView):
-
+    template_name = "pinax/teams/team_list.html"
     model = Team
     context_object_name = "teams"
 
@@ -84,7 +83,7 @@ def team_detail(request):
     role = team.role_for(request.user)
     if team.member_access == Team.MEMBER_ACCESS_INVITATION and state is None:
         raise Http404()
-    return render(request, "teams/team_detail.html", {
+    return render(request, "pinax/teams/team_detail.html", {
         "team": team,
         "state": state,
         "role": role,
@@ -105,7 +104,7 @@ def team_manage(request):
        state is None and not request.user.is_staff:
         raise Http404()
 
-    return render(request, "teams/team_manage.html", {
+    return render(request, "pinax/teams/team_manage.html", {
         "team": team,
         "state": state,
         "role": role,
@@ -205,9 +204,7 @@ def team_invite(request):
         else:
             membership = team.add_user(user_or_email, role)
         data = {
-            "html": render_to_string(
-                "teams/_invite_form.html",
-                {
+            "html": render_to_string("pinax/teams/_invite_form.html", {
                     "invite_form": TeamInviteUserForm(team=team),
                     "team": team
                 },
@@ -227,9 +224,7 @@ def team_invite(request):
                 }[membership.role]
             data.update({
                 "append-fragments": {
-                    fragment_class: render_to_string(
-                        "teams/_membership.html",
-                        {
+                    fragment_class: render_to_string("pinax/teams/_membership.html", {
                             "membership": membership
                         },
                         context_instance=RequestContext(request)
@@ -238,7 +233,7 @@ def team_invite(request):
             })
     else:
         data = {
-            "html": render_to_string("teams/_invite_form.html", {
+            "html": render_to_string("pinax/teams/_invite_form.html", {
                 "invite_form": form,
                 "team": team
             }, context_instance=RequestContext(request))
@@ -263,9 +258,7 @@ def team_member_resend_invite(request, pk):
     membership = get_object_or_404(request.team.memberships.all(), pk=pk)
     membership.resend_invite()
     data = {
-        "html": render_to_string(
-            "teams/_membership.html",
-            {
+        "html": render_to_string("pinax/teams/_membership.html", {
                 "membership": membership
             },
             context_instance=RequestContext(request)
@@ -280,9 +273,7 @@ def team_member_promote(request, pk):
     membership = get_object_or_404(request.team.memberships.all(), pk=pk)
     membership.promote(by=request.user)
     data = {
-        "html": render_to_string(
-            "teams/_membership.html",
-            {
+        "html": render_to_string("pinax/teams/_membership.html", {
                 "membership": membership
             },
             context_instance=RequestContext(request)
@@ -297,9 +288,7 @@ def team_member_demote(request, pk):
     membership = get_object_or_404(request.team.memberships.all(), pk=pk)
     membership.demote(by=request.user)
     data = {
-        "html": render_to_string(
-            "teams/_membership.html",
-            {
+        "html": render_to_string("pinax/teams/_membership.html", {
                 "membership": membership
             },
             context_instance=RequestContext(request)
