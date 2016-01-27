@@ -72,7 +72,7 @@ def team_update(request):
             return redirect(team.get_absolute_url())
     else:
         form = TeamForm(instance=team)
-    return render(request, "teams/team_form.html", {"form": form, "team": team})
+    return render(request, "pinax/teams/team_form.html", {"form": form, "team": team})
 
 
 @team_required
