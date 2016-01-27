@@ -204,7 +204,9 @@ def team_invite(request):
         else:
             membership = team.add_user(user_or_email, role)
         data = {
-            "html": render_to_string("pinax/teams/_invite_form.html", {
+            "html": render_to_string(
+                "pinax/teams/_invite_form.html",
+                {
                     "invite_form": TeamInviteUserForm(team=team),
                     "team": team
                 },
@@ -224,7 +226,9 @@ def team_invite(request):
                 }[membership.role]
             data.update({
                 "append-fragments": {
-                    fragment_class: render_to_string("pinax/teams/_membership.html", {
+                    fragment_class: render_to_string(
+                        "pinax/teams/_membership.html",
+                        {
                             "membership": membership
                         },
                         context_instance=RequestContext(request)
@@ -258,7 +262,9 @@ def team_member_resend_invite(request, pk):
     membership = get_object_or_404(request.team.memberships.all(), pk=pk)
     membership.resend_invite()
     data = {
-        "html": render_to_string("pinax/teams/_membership.html", {
+        "html": render_to_string(
+            "pinax/teams/_membership.html",
+            {
                 "membership": membership
             },
             context_instance=RequestContext(request)
@@ -273,7 +279,9 @@ def team_member_promote(request, pk):
     membership = get_object_or_404(request.team.memberships.all(), pk=pk)
     membership.promote(by=request.user)
     data = {
-        "html": render_to_string("pinax/teams/_membership.html", {
+        "html": render_to_string(
+            "pinax/teams/_membership.html",
+            {
                 "membership": membership
             },
             context_instance=RequestContext(request)
@@ -288,7 +296,9 @@ def team_member_demote(request, pk):
     membership = get_object_or_404(request.team.memberships.all(), pk=pk)
     membership.demote(by=request.user)
     data = {
-        "html": render_to_string("pinax/teams/_membership.html", {
+        "html": render_to_string(
+            "pinax/teams/_membership.html",
+            {
                 "membership": membership
             },
             context_instance=RequestContext(request)
