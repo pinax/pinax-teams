@@ -19,11 +19,20 @@ Installation
         # ...
     )
 
+* add ``TEAM_NAME_BLACKLIST``to your settings::
 
-* Add urls:
+    TEAM_NAME_BLACKLIST = ['black_listed_name1', 'blacklisted_name_2]
 
-    # urls.py
+or if you don't want to blacklist any team name::
+
+    TEAM_NAME_BLACKLIST = []
+
+
+* Add entry to your ``urls.py``::
+
     url(r"^teams/", include("pinax.teams.urls")),
+
+
 
 
 .. _dependencies:
