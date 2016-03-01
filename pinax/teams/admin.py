@@ -32,7 +32,7 @@ class MembershipAdmin(VersionAdmin):
     raw_id_fields = ["user"]
     list_display = ["team", "user", "state", "role"]
     list_filter = ["team"]
-    search_fields = ["user__username"]
+    search_fields = hookset.membership_search_fields
 
 
 admin.site.register(Membership, MembershipAdmin)
