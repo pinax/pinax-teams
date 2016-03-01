@@ -4,6 +4,7 @@ from django.utils.translation import ugettext_lazy as _
 from reversion.admin import VersionAdmin
 
 from .models import Team, Membership
+from .hooks import hookset
 
 
 def members_count(obj):

@@ -14,6 +14,7 @@ from reversion import revisions as reversion
 from slugify import slugify
 
 from . import signals
+from .hooks import hookset
 
 
 def avatar_upload(instance, filename):
