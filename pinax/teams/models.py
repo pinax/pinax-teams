@@ -136,7 +136,7 @@ class Team(models.Model):
     def is_on_team(self, user):
         return self.acceptances.filter(user=user).exists()
 
-    def add_member(self, user, role=None, state=None):
+    def add_member(self, user, role=None, state=None, by=None):
         # we do this, rather than put the Membership constants in declaration
         # because Membership is not yet defined
         if role is None:
@@ -149,6 +149,7 @@ class Team(models.Model):
             user=user,
             defaults={"role": role, "state": state},
         )
+        signals.added_member.send(sender=self, membership=membership, by=by)
         return membership
 
     def add_user(self, user, role, by=None):
