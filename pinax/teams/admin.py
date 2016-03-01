@@ -3,7 +3,6 @@ from django.utils.translation import ugettext_lazy as _
 
 from reversion.admin import VersionAdmin
 
-from .hooks import hookset
 from .models import Team, Membership
 
 
