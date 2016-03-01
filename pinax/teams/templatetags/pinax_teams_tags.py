@@ -1,6 +1,6 @@
 from django import template
 
-from ..models import Team
+from ..models import Team, Membership
 
 
 register = template.Library()
@@ -38,3 +38,44 @@ def available_teams(parser, token):
     {% available_teams as available_teams %}
     """
     return AvailableTeamsNode.handle_token(parser, token)
+
+
+@register.assignment_tag(takes_context=True)
+def ancestors_for(context, team=None):
+    if team is None:
+        team = context["team"]
+
+    ancestors = []
+    for ancestor in team.ancestors:
+        ancestors.append({
+            "team": ancestor,
+            "can_manage": ancestor.role_for(context["user"]) in [Membership.ROLE_MANAGER, Membership.ROLE_OWNER]
+        })
+    context["ancestors"] = ancestors
+    return ancestors
+
+
+@register.assignment_tag(takes_context=True)
+def descendants_for(context, team=None):
+    if team is None:
+        team = context["team"]
+
+    descendants = []
+    for descendant in team.children.order_by("slug"):
+        descendants.append({
+            "team": descendant,
+            "can_manage": descendant.role_for(context["user"]) in [Membership.ROLE_MANAGER, Membership.ROLE_OWNER]
+        })
+    return descendants
+
+
+# @@@ document template
+@register.inclusion_tag("teams/_breadcrumbs.html", takes_context=True)
+def get_team_breadcrumbs(context):
+    context["ancestors"] = ancestors_for(context)
+    return context
+
+
+@register.filter()
+def is_managed_by(team, user):
+    return team.role_for(user) in [Membership.ROLE_MANAGER, Membership.ROLE_OWNER]

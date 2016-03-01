@@ -4,6 +4,7 @@ import uuid
 
 from django.conf import settings
 from django.core.urlresolvers import reverse
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
@@ -14,6 +15,10 @@ from reversion import revisions as reversion
 from slugify import slugify
 
 from . import signals
+from .hooks import hookset
+
+
+MESSAGE_STRINGS = hookset.get_message_strings()
 
 
 def avatar_upload(instance, filename):
@@ -22,8 +27,14 @@ def avatar_upload(instance, filename):
     return os.path.join("avatars", filename)
 
 
-def create_slug(name):
-    return slugify(name)[:50]
+def create_slug(name, parent=None):
+    slug = slugify(name)
+    if parent:
+        slug = "{parent_pk}-{slug}".format(
+            parent_pk=parent.pk,
+            slug=slug,
+        )
+    return slug[:50]
 
 
 @python_2_unicode_compatible
@@ -56,11 +67,17 @@ class Team(models.Model):
     creator = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="teams_created", verbose_name=_("creator"))
     created = models.DateTimeField(default=timezone.now, editable=False, verbose_name=_("created"))
 
+    parent = models.ForeignKey("self", blank=True, null=True, related_name="children")
+
     def get_absolute_url(self):
         return reverse("team_detail", args=[self.slug])
 
     def __str__(self):
         return self.name
+
+    def clean(self):
+        if self.pk and self.pk == self.parent_id:
+            raise ValidationError({"parent": MESSAGE_STRINGS["self-referencing-parent"]})
 
     def can_join(self, user):
         state = self.state_for(user)
@@ -79,6 +96,28 @@ class Team(models.Model):
     def can_apply(self, user):
         state = self.state_for(user)
         return self.member_access == Team.MEMBER_ACCESS_APPLICATION and state is None
+
+    #@@@
+    def get_root_team(team):
+        while getattr(team, "parent"):
+            team = team.parent
+        return team
+
+    # @@@
+    @property
+    def ancestors(team):
+        chain = []
+        while getattr(team, "parent"):
+            chain.append(team)
+            team = team.parent
+        chain.append(team)
+        #filo
+        chain.reverse()
+        return chain
+
+    @property
+    def full_name(self):
+        return " : ".join([a.name for a in self.ancestors])
 
     @property
     def applicants(self):
@@ -174,10 +213,27 @@ class Team(models.Model):
             return membership
 
     def for_user(self, user):
-        try:
-            return self.memberships.get(user=user)
-        except Membership.DoesNotExist:
-            pass
+        """
+        Return the first membership found for the current team and user
+        or for any of the team's parents and the user
+
+        @@@ we may decide to explicitly add membership for "children" if a
+        user is a manager or member of a parent org
+        """
+        attr = "_membership_for_user"
+
+        if hasattr(self, attr) is False:
+            team = self
+            membership = None
+            while team:
+                try:
+                    membership = team.memberships.get(user=user)
+                    break
+                except Membership.DoesNotExist:
+                    team = team.parent
+            # @@@ care about the type of membership if retrieved from a parent
+            setattr(self, attr, membership)
+        return getattr(self, attr)
 
     def state_for(self, user):
         membership = self.for_user(user=user)
@@ -191,7 +247,7 @@ class Team(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.id:
-            self.slug = create_slug(self.name)
+            self.slug = create_slug(self.name, self.parent)
         self.full_clean()
         super(Team, self).save(*args, **kwargs)
 
