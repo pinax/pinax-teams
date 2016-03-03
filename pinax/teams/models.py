@@ -324,8 +324,8 @@ class Membership(models.Model):
 
     class Meta:
         unique_together = [("team", "user", "invite")]
-        verbose_name = _("Team")
-        verbose_name_plural = _("Teams")
+        verbose_name = _("Membership")
+        verbose_name_plural = _("Memberships")
 
 
 reversion.register(Membership)
