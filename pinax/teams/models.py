@@ -182,7 +182,6 @@ class Base(models.Model):
             return membership.role
 
 
-@python_2_unicode_compatible
 class Role(Base):
     pass
 
