@@ -48,8 +48,6 @@ class Base(models.Model):
 
     member_access = models.CharField(max_length=20, choices=MEMBER_ACCESS_CHOICES, verbose_name=_("member access"))
     manager_access = models.CharField(max_length=20, choices=MANAGER_ACCESS_CHOICES, verbose_name=_("manager access"))
-    creator = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="teams_created", verbose_name=_("creator"))
-    created = models.DateTimeField(default=timezone.now, editable=False, verbose_name=_("created"))
 
     class Meta:
         abstract = True
@@ -196,6 +194,8 @@ class Team(Base):
     name = models.CharField(max_length=100, verbose_name=_("name"))
     avatar = models.ImageField(upload_to=avatar_upload, blank=True, verbose_name=_("avatar"))
     description = models.TextField(blank=True, verbose_name=_("description"))
+    creator = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="teams_created", verbose_name=_("creator"))
+    created = models.DateTimeField(default=timezone.now, editable=False, verbose_name=_("created"))
 
     class Meta:
         verbose_name = _("Team")
