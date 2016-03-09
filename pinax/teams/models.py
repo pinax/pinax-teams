@@ -250,6 +250,9 @@ class BaseMembership(models.Model):
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default=ROLE_MEMBER, verbose_name=_("role"))
     created = models.DateTimeField(default=timezone.now, verbose_name=_("created"))
 
+    class Meta:
+        abstract = True
+
     def is_owner(self):
         return self.role == BaseMembership.ROLE_OWNER
 
