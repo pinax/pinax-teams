@@ -183,7 +183,10 @@ class Base(models.Model):
 
 
 class Role(Base):
-    pass
+
+    class Meta:
+        verbose_name = _("Role")
+        verbose_name_plural = _("Roles")
 
 
 @python_2_unicode_compatible
