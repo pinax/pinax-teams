@@ -26,8 +26,7 @@ def create_slug(name):
     return slugify(name)[:50]
 
 
-@python_2_unicode_compatible
-class Team(models.Model):
+class Base(models.Model):
 
     MEMBER_ACCESS_OPEN = "open"
     MEMBER_ACCESS_APPLICATION = "application"
@@ -47,24 +46,19 @@ class Team(models.Model):
         (MANAGER_ACCESS_INVITE, _("invite someone"))
     ]
 
-    slug = models.SlugField(unique=True)
-    name = models.CharField(max_length=100, verbose_name=_("name"))
-    avatar = models.ImageField(upload_to=avatar_upload, blank=True, verbose_name=_("avatar"))
-    description = models.TextField(blank=True, verbose_name=_("description"))
     member_access = models.CharField(max_length=20, choices=MEMBER_ACCESS_CHOICES, verbose_name=_("member access"))
     manager_access = models.CharField(max_length=20, choices=MANAGER_ACCESS_CHOICES, verbose_name=_("manager access"))
     creator = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="teams_created", verbose_name=_("creator"))
     created = models.DateTimeField(default=timezone.now, editable=False, verbose_name=_("created"))
 
-    def get_absolute_url(self):
-        return reverse("team_detail", args=[self.slug])
-
-    def __str__(self):
-        return self.name
+    class Meta:
+        abstract = True
+        verbose_name = _("Base")
+        verbose_name_plural = _("Bases")
 
     def can_join(self, user):
         state = self.state_for(user)
-        if self.member_access == Team.MEMBER_ACCESS_OPEN and state is None:
+        if self.member_access == Base.MEMBER_ACCESS_OPEN and state is None:
             return True
         elif state == Membership.STATE_INVITED:
             return True
@@ -78,7 +72,7 @@ class Team(models.Model):
 
     def can_apply(self, user):
         state = self.state_for(user)
-        return self.member_access == Team.MEMBER_ACCESS_APPLICATION and state is None
+        return self.member_access == Base.MEMBER_ACCESS_APPLICATION and state is None
 
     @property
     def applicants(self):
@@ -153,7 +147,7 @@ class Team(models.Model):
 
     def add_user(self, user, role):
         state = Membership.STATE_AUTO_JOINED
-        if self.manager_access == Team.MANAGER_ACCESS_INVITE:
+        if self.manager_access == Base.MANAGER_ACCESS_INVITE:
             state = Membership.STATE_INVITED
         membership, _ = self.memberships.get_or_create(
             user=user,
@@ -189,15 +183,35 @@ class Team(models.Model):
         if membership:
             return membership.role
 
+
+@python_2_unicode_compatible
+class Role(Base):
+    pass
+
+
+@python_2_unicode_compatible
+class Team(Base):
+
+    slug = models.SlugField(unique=True)
+    name = models.CharField(max_length=100, verbose_name=_("name"))
+    avatar = models.ImageField(upload_to=avatar_upload, blank=True, verbose_name=_("avatar"))
+    description = models.TextField(blank=True, verbose_name=_("description"))
+
+    class Meta:
+        verbose_name = _("Team")
+        verbose_name_plural = _("Teams")
+
+    def get_absolute_url(self):
+        return reverse("team_detail", args=[self.slug])
+
+    def __str__(self):
+        return self.name
+
     def save(self, *args, **kwargs):
         if not self.id:
             self.slug = create_slug(self.name)
         self.full_clean()
         super(Team, self).save(*args, **kwargs)
-
-    class Meta:
-        verbose_name = _("Team")
-        verbose_name_plural = _("Teams")
 
 
 @python_2_unicode_compatible
