@@ -3,6 +3,7 @@ import os
 import uuid
 
 from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils import timezone
@@ -136,7 +137,7 @@ class BaseTeam(models.Model):
         if state is None:
             state = BaseMembership.STATE_AUTO_JOINED
 
-        membership, created = BaseMembership.objects.get_or_create(
+        membership, created = self.memberships.objects.get_or_create(
             team=self,
             user=user,
             defaults={"role": role, "state": state},
@@ -168,7 +169,7 @@ class BaseTeam(models.Model):
     def for_user(self, user):
         try:
             return self.memberships.get(user=user)
-        except BaseMembership.DoesNotExist:
+        except ObjectDoesNotExist:
             pass
 
     def state_for(self, user):
