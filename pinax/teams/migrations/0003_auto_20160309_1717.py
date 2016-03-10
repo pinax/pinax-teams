@@ -11,7 +11,6 @@ import django.utils.timezone
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('invitations', '0002_auto_20160309_1717'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
         ('pinax_teams', '0002_auto_20160309_1536'),
     ]
