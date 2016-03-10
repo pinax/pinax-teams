@@ -124,27 +124,6 @@ class TeamManageView(TemplateView):
 
 @team_required
 @login_required
-def team_manage(request):
-    team = request.team
-    state = team.state_for(request.user)
-    role = team.role_for(request.user)
-    if team.manager_access == Team.MEMBER_ACCESS_INVITATION and \
-       state is None and not request.user.is_staff:
-        raise Http404()
-
-    return render(request, "teams/team_manage.html", {
-        "team": team,
-        "state": state,
-        "role": role,
-        "invite_form": TeamInviteUserForm(team=team),
-        "can_join": team.can_join(request.user),
-        "can_leave": team.can_leave(request.user),
-        "can_apply": team.can_apply(request.user),
-    })
-
-
-@team_required
-@login_required
 def team_join(request):
     team = request.team
     state = team.state_for(request.user)
@@ -314,64 +293,6 @@ class TeamInviteView(FormView):
 
     def render_to_response(self, context, **response_kwargs):
         return JsonResponse(context)
-
-
-@team_required
-@login_required
-@require_POST
-def team_invite(request):
-    team = request.team
-    role = team.role_for(request.user)
-    if role not in [Membership.ROLE_MANAGER, Membership.ROLE_OWNER]:
-        raise Http404()
-    form = TeamInviteUserForm(request.POST, team=team)
-    if form.is_valid():
-        user_or_email = form.cleaned_data["invitee"]
-        role = form.cleaned_data["role"]
-        if isinstance(user_or_email, string_types):
-            membership = team.invite_user(request.user, user_or_email, role)
-        else:
-            membership = team.add_user(user_or_email, role)
-        data = {
-            "html": render_to_string(
-                "teams/_invite_form.html",
-                {
-                    "invite_form": TeamInviteUserForm(team=team),
-                    "team": team
-                },
-                context_instance=RequestContext(request)
-            )
-        }
-        if membership is not None:
-            if membership.state == Membership.STATE_APPLIED:
-                fragment_class = ".applicants"
-            elif membership.state == Membership.STATE_INVITED:
-                fragment_class = ".invitees"
-            elif membership.state in (Membership.STATE_AUTO_JOINED, Membership.STATE_ACCEPTED):
-                fragment_class = {
-                    Membership.ROLE_OWNER: ".owners",
-                    Membership.ROLE_MANAGER: ".managers",
-                    Membership.ROLE_MEMBER: ".members"
-                }[membership.role]
-            data.update({
-                "append-fragments": {
-                    fragment_class: render_to_string(
-                        "teams/_membership.html",
-                        {
-                            "membership": membership
-                        },
-                        context_instance=RequestContext(request)
-                    )
-                }
-            })
-    else:
-        data = {
-            "html": render_to_string("teams/_invite_form.html", {
-                "invite_form": form,
-                "team": team
-            }, context_instance=RequestContext(request))
-        }
-    return HttpResponse(json.dumps(data), content_type="application/json")
 
 
 @manager_required
