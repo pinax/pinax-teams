@@ -137,7 +137,7 @@ class BaseTeam(models.Model):
         if state is None:
             state = BaseMembership.STATE_AUTO_JOINED
 
-        membership, created = self.memberships.objects.get_or_create(
+        membership, created = self.memberships.get_or_create(
             team=self,
             user=user,
             defaults={"role": role, "state": state},
