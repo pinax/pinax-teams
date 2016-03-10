@@ -244,8 +244,6 @@ class BaseMembership(models.Model):
         (ROLE_OWNER, _("owner"))
     ]
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="memberships", null=True, blank=True, verbose_name=_("user"))
-    invite = models.ForeignKey(JoinInvitation, related_name="memberships", null=True, blank=True, verbose_name=_("invite"))
     state = models.CharField(max_length=20, choices=STATE_CHOICES, verbose_name=_("state"))
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default=ROLE_MEMBER, verbose_name=_("role"))
     created = models.DateTimeField(default=timezone.now, verbose_name=_("created"))
@@ -341,6 +339,8 @@ class BaseMembership(models.Model):
 class SimpleMembership(BaseMembership):
 
     team = models.ForeignKey(SimpleTeam, related_name="memberships", verbose_name=_("team"))
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="simple_memberships", null=True, blank=True, verbose_name=_("user"))
+    invite = models.ForeignKey(JoinInvitation, related_name="simple_memberships", null=True, blank=True, verbose_name=_("invite"))
 
     def __str__(self):
         return "{0} in {1}".format(self.user, self.team)
@@ -355,6 +355,8 @@ class SimpleMembership(BaseMembership):
 class Membership(BaseMembership):
 
     team = models.ForeignKey(Team, related_name="memberships", verbose_name=_("team"))
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="memberships", null=True, blank=True, verbose_name=_("user"))
+    invite = models.ForeignKey(JoinInvitation, related_name="memberships", null=True, blank=True, verbose_name=_("invite"))
 
     def __str__(self):
         return "{0} in {1}".format(self.user, self.team)
