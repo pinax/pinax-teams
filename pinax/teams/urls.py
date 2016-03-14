@@ -14,11 +14,11 @@ urlpatterns = [
     url(r"^(?P<slug>[\w\-]+)/leave/$", views.team_leave, name="team_leave"),
     url(r"^(?P<slug>[\w\-]+)/apply/$", views.team_apply, name="team_apply"),
     url(r"^(?P<slug>[\w\-]+)/edit/$", views.team_update, name="team_edit"),
-    url(r"^(?P<slug>[\w\-]+)/manage/$", views.team_manage, name="team_manage"),
+    url(r"^(?P<slug>[\w\-]+)/manage/$", views.TeamManageView.as_view(), name="team_manage"),
 
     # membership specific
     url(r"^(?P<slug>[\w\-]+)/ac/users-to-invite/$", views.autocomplete_users, name="team_autocomplete_users"),  # noqa
-    url(r"^(?P<slug>[\w\-]+)/invite-user/$", views.team_invite, name="team_invite"),
+    url(r"^(?P<slug>[\w\-]+)/invite-user/$", views.TeamInviteView.as_view(), name="team_invite"),
     url(r"^(?P<slug>[\w\-]+)/members/(?P<pk>\d+)/revoke-invite/$", views.team_member_revoke_invite, name="team_member_revoke_invite"),  # noqa
     url(r"^(?P<slug>[\w\-]+)/members/(?P<pk>\d+)/resend-invite/$", views.team_member_resend_invite, name="team_member_resend_invite"),  # noqa
     url(r"^(?P<slug>[\w\-]+)/members/(?P<pk>\d+)/promote/$", views.team_member_promote, name="team_member_promote"),  # noqa
