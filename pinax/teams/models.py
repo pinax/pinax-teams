@@ -321,7 +321,7 @@ class Membership(models.Model):
 
     @property
     def invitee(self):
-        return self.user or self.invite.to_user_email
+        return self.user or self.invite.to_user_email()
 
     def __str__(self):
         return "{0} in {1}".format(self.user, self.team)
