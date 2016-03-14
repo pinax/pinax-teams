@@ -130,7 +130,7 @@ class BaseTeam(models.Model):
     def is_on_team(self, user):
         return self.acceptances.filter(user=user).exists()
 
-    def add_member(self, user, role=None, state=None):
+    def add_member(self, user, role=None, state=None, by=None):
         # we do this, rather than put the BaseMembership constants in declaration
         # because BaseMembership is not yet defined
         if role is None:
@@ -143,9 +143,10 @@ class BaseTeam(models.Model):
             user=user,
             defaults={"role": role, "state": state},
         )
+        signals.added_member.send(sender=self, membership=membership, by=by)
         return membership
 
-    def add_user(self, user, role):
+    def add_user(self, user, role, by=None):
         state = BaseMembership.STATE_AUTO_JOINED
         if self.manager_access == BaseTeam.MANAGER_ACCESS_INVITE:
             state = BaseMembership.STATE_INVITED
@@ -153,7 +154,7 @@ class BaseTeam(models.Model):
             user=user,
             defaults={"role": role, "state": state}
         )
-        signals.added_member.send(sender=self, membership=membership)
+        signals.added_member.send(sender=self, membership=membership, by=by)
         return membership
 
     def invite_user(self, from_user, to_email, role, message=None):
@@ -164,7 +165,7 @@ class BaseTeam(models.Model):
                 defaults={"role": role, "state": BaseMembership.STATE_INVITED}
             )
             invite.send_invite()
-            signals.invited_user.send(sender=self, membership=membership)
+            signals.invited_user.send(sender=self, membership=membership, by=from_user)
             return membership
 
     def for_user(self, user):
@@ -271,7 +272,7 @@ class BaseMembership(models.Model):
             if self.role == Membership.ROLE_MEMBER:
                 self.role = Membership.ROLE_MANAGER
                 self.save()
-                signals.promoted_member.send(sender=self, membership=self)
+                signals.promoted_member.send(sender=self, membership=self, by=by)
                 return True
         return False
 
@@ -281,7 +282,7 @@ class BaseMembership(models.Model):
             if self.role == Membership.ROLE_MANAGER:
                 self.role = Membership.ROLE_MEMBER
                 self.save()
-                signals.demoted_member.send(sender=self, membership=self)
+                signals.demoted_member.send(sender=self, membership=self, by=by)
                 return True
         return False
 
@@ -320,20 +321,20 @@ class BaseMembership(models.Model):
             return self.invite.get_status_display()
         return "Unknown"
 
-    def resend_invite(self):
+    def resend_invite(self, by=None):
         if self.invite is not None:
             code = self.invite.signup_code
             code.expiry = timezone.now() + datetime.timedelta(days=5)
             code.save()
             code.send()
-            signals.resent_invite.send(sender=self, membership=self)
+            signals.resent_invite.send(sender=self, membership=self, by=by)
 
-    def remove(self):
+    def remove(self, by=None):
         if self.invite is not None:
             self.invite.signup_code.delete()
             self.invite.delete()
         self.delete()
-        signals.removed_membership.send(sender=Membership, team=self.team, user=self.user)
+        signals.removed_membership.send(sender=Membership, team=self.team, user=self.user, invitee=self.invitee, by=by)
 
     @property
     def invitee(self):
