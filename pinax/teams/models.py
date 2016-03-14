@@ -15,6 +15,7 @@ from reversion import revisions as reversion
 from slugify import slugify
 
 from . import signals
+from .hooks import hookset
 
 
 def avatar_upload(instance, filename):
@@ -178,6 +179,9 @@ class BaseTeam(models.Model):
             return membership.state
 
     def role_for(self, user):
+        if hookset.user_is_staff(user):
+            return Membership.ROLE_MANAGER
+
         membership = self.for_user(user)
         if membership:
             return membership.role
@@ -333,7 +337,7 @@ class BaseMembership(models.Model):
 
     @property
     def invitee(self):
-        return self.user or self.invite.to_user_email
+        return self.user or self.invite.to_user_email()
 
 
 @python_2_unicode_compatible

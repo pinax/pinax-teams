@@ -63,7 +63,9 @@ class TeamInviteUserForm(forms.Form):
                 raise forms.ValidationError(MESSAGE_STRINGS["user-member-exists"])
         except User.DoesNotExist:
             try:
-                invitee = User.objects.get(username=self.cleaned_data["invitee"])
+                # search by USERNAME_FIELD
+                params = {User.USERNAME_FIELD: self.cleaned_data["invitee"]}
+                invitee = User.objects.get(**params)
                 if self.team.is_on_team(invitee):
                     raise forms.ValidationError(MESSAGE_STRINGS["user-member-exists"])
             except User.DoesNotExist:
