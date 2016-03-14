@@ -1,12 +1,13 @@
 import json
 
-from django.http import Http404, HttpResponse, HttpResponseRedirect, HttpResponseForbidden
+from django.http import Http404, HttpResponse, HttpResponseRedirect, HttpResponseForbidden, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template import RequestContext
 from django.template.loader import render_to_string
+from django.utils.decorators import method_decorator
 from django.views.decorators.http import require_POST
 from django.views.generic.edit import CreateView
-from django.views.generic import ListView
+from django.views.generic import ListView, FormView, TemplateView
 
 from django.contrib import messages
 from django.contrib.auth import get_user_model
@@ -95,25 +96,30 @@ def team_detail(request):
     })
 
 
-@team_required
-@login_required
-def team_manage(request):
-    team = request.team
-    state = team.state_for(request.user)
-    role = team.role_for(request.user)
-    if team.manager_access == Team.MEMBER_ACCESS_INVITATION and \
-       state is None and not request.user.is_staff:
-        raise Http404()
+class TeamManageView(TemplateView):
 
-    return render(request, "teams/team_manage.html", {
-        "team": team,
-        "state": state,
-        "role": role,
-        "invite_form": TeamInviteUserForm(team=team),
-        "can_join": team.can_join(request.user),
-        "can_leave": team.can_leave(request.user),
-        "can_apply": team.can_apply(request.user),
-    })
+    template_name = "teams/team_manage.html"
+
+    @method_decorator(manager_required)
+    def dispatch(self, *args, **kwargs):
+        self.team = self.request.team
+        self.role = self.team.role_for(self.request.user)
+        return super(TeamManageView, self).dispatch(*args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        ctx = super(TeamManageView, self).get_context_data(**kwargs)
+        ctx.update({
+            "team": self.team,
+            "role": self.role,
+            "invite_form": self.get_team_invite_form(),
+            "can_join": self.team.can_join(self.request.user),
+            "can_leave": self.team.can_leave(self.request.user),
+            "can_apply": self.team.can_apply(self.request.user),
+        })
+        return ctx
+
+    def get_team_invite_form(self):
+        return TeamInviteUserForm(team=self.team)
 
 
 @team_required
@@ -188,32 +194,56 @@ def team_reject(request, pk):
     return redirect("team_detail", slug=membership.team.slug)
 
 
-@team_required
-@login_required
-@require_POST
-def team_invite(request):
-    team = request.team
-    role = team.role_for(request.user)
-    if role not in [Membership.ROLE_MANAGER, Membership.ROLE_OWNER]:
-        raise Http404()
-    form = TeamInviteUserForm(request.POST, team=team)
-    if form.is_valid():
-        user_or_email = form.cleaned_data["invitee"]
-        role = form.cleaned_data["role"]
-        if isinstance(user_or_email, string_types):
-            membership = team.invite_user(request.user, user_or_email, role)
-        else:
-            membership = team.add_user(user_or_email, role, by=request.user)
+class TeamInviteView(FormView):
+    http_method_names = ["post"]
+    form_class = TeamInviteUserForm
+
+    @method_decorator(manager_required)
+    def dispatch(self, *args, **kwargs):
+        self.team = self.request.team
+        return super(TeamInviteView, self).dispatch(*args, **kwargs)
+
+    def get_form_kwargs(self):
+        form_kwargs = super(TeamInviteView, self).get_form_kwargs()
+        form_kwargs.update({"team": self.team})
+        return form_kwargs
+
+    def get_unbound_form(self):
+        """
+        Overrides behavior of FormView.get_form_kwargs
+        when method is POST or PUT
+        """
+        form_kwargs = self.get_form_kwargs()
+        # @@@ remove fields that would cause the form to be bound
+        # when instantiated
+        bound_fields = ["data", "files"]
+        for field in bound_fields:
+            form_kwargs.pop(field, None)
+        return self.get_form_class()(**form_kwargs)
+
+    def after_membership_added(self, form):
+        """
+        Allows the developer to customize actions that happen after a membership
+        was added in form_valid
+        """
+        pass
+
+    def get_form_success_data(self, form):
+        """
+        Allows customization of the JSON data returned when a valid form submission occurs.
+        """
         data = {
             "html": render_to_string(
                 "teams/_invite_form.html",
                 {
-                    "invite_form": TeamInviteUserForm(team=team),
-                    "team": team
+                    "invite_form": self.get_unbound_form(),
+                    "team": self.team
                 },
-                context_instance=RequestContext(request)
+                context_instance=RequestContext(self.request)
             )
         }
+
+        membership = self.membership
         if membership is not None:
             if membership.state == Membership.STATE_APPLIED:
                 fragment_class = ".applicants"
@@ -230,20 +260,39 @@ def team_invite(request):
                     fragment_class: render_to_string(
                         "teams/_membership.html",
                         {
-                            "membership": membership
+                            "membership": membership,
+                            "team": self.team
                         },
-                        context_instance=RequestContext(request)
+                        context_instance=RequestContext(self.request)
                     )
                 }
             })
-    else:
+        return data
+
+    def form_valid(self, form):
+        user_or_email = form.cleaned_data["invitee"]
+        role = form.cleaned_data["role"]
+        if isinstance(user_or_email, string_types):
+            self.membership = self.team.invite_user(self.request.user, user_or_email, role)
+        else:
+            self.membership = self.team.add_user(user_or_email, role, by=self.request.user)
+
+        self.after_membership_added(form)
+
+        data = self.get_form_success_data(form)
+        return self.render_to_response(data)
+
+    def form_invalid(self, form):
         data = {
             "html": render_to_string("teams/_invite_form.html", {
                 "invite_form": form,
-                "team": team
-            }, context_instance=RequestContext(request))
+                "team": self.team
+            }, context_instance=RequestContext(self.request))
         }
-    return HttpResponse(json.dumps(data), content_type="application/json")
+        return self.render_to_response(data)
+
+    def render_to_response(self, context, **response_kwargs):
+        return JsonResponse(context)
 
 
 @manager_required

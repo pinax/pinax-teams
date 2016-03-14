@@ -14,6 +14,7 @@ from reversion import revisions as reversion
 from slugify import slugify
 
 from . import signals
+from .hooks import hookset
 
 
 def avatar_upload(instance, filename):
@@ -186,6 +187,9 @@ class Team(models.Model):
             return membership.state
 
     def role_for(self, user):
+        if hookset.user_is_staff(user):
+            return Membership.ROLE_MANAGER
+
         membership = self.for_user(user)
         if membership:
             return membership.role
@@ -318,15 +322,15 @@ class Membership(models.Model):
 
     @property
     def invitee(self):
-        return self.user or self.invite.to_user_email
+        return self.user or self.invite.to_user_email()
 
     def __str__(self):
         return "{0} in {1}".format(self.user, self.team)
 
     class Meta:
         unique_together = [("team", "user", "invite")]
-        verbose_name = _("Team")
-        verbose_name_plural = _("Teams")
+        verbose_name = _("Membership")
+        verbose_name_plural = _("Memberships")
 
 
 reversion.register(Membership)
