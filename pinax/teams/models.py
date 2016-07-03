@@ -3,6 +3,7 @@ import os
 import uuid
 
 from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils import timezone
@@ -27,8 +28,7 @@ def create_slug(name):
     return slugify(name)[:50]
 
 
-@python_2_unicode_compatible
-class Team(models.Model):
+class BaseTeam(models.Model):
 
     MEMBER_ACCESS_OPEN = "open"
     MEMBER_ACCESS_APPLICATION = "application"
@@ -48,26 +48,19 @@ class Team(models.Model):
         (MANAGER_ACCESS_INVITE, _("invite someone"))
     ]
 
-    slug = models.SlugField(unique=True)
-    name = models.CharField(max_length=100, verbose_name=_("name"))
-    avatar = models.ImageField(upload_to=avatar_upload, blank=True, verbose_name=_("avatar"))
-    description = models.TextField(blank=True, verbose_name=_("description"))
     member_access = models.CharField(max_length=20, choices=MEMBER_ACCESS_CHOICES, verbose_name=_("member access"))
     manager_access = models.CharField(max_length=20, choices=MANAGER_ACCESS_CHOICES, verbose_name=_("manager access"))
-    creator = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="teams_created", verbose_name=_("creator"))
-    created = models.DateTimeField(default=timezone.now, editable=False, verbose_name=_("created"))
 
-    def get_absolute_url(self):
-        return reverse("team_detail", args=[self.slug])
-
-    def __str__(self):
-        return self.name
+    class Meta:
+        abstract = True
+        verbose_name = _("Base")
+        verbose_name_plural = _("Bases")
 
     def can_join(self, user):
         state = self.state_for(user)
-        if self.member_access == Team.MEMBER_ACCESS_OPEN and state is None:
+        if self.member_access == BaseTeam.MEMBER_ACCESS_OPEN and state is None:
             return True
-        elif state == Membership.STATE_INVITED:
+        elif state == BaseMembership.STATE_INVITED:
             return True
         else:
             return False
@@ -75,52 +68,52 @@ class Team(models.Model):
     def can_leave(self, user):
         # managers can't leave at the moment
         role = self.role_for(user)
-        return role == Membership.ROLE_MEMBER
+        return role == BaseMembership.ROLE_MEMBER
 
     def can_apply(self, user):
         state = self.state_for(user)
-        return self.member_access == Team.MEMBER_ACCESS_APPLICATION and state is None
+        return self.member_access == BaseTeam.MEMBER_ACCESS_APPLICATION and state is None
 
     @property
     def applicants(self):
-        return self.memberships.filter(state=Membership.STATE_APPLIED)
+        return self.memberships.filter(state=BaseMembership.STATE_APPLIED)
 
     @property
     def invitees(self):
-        return self.memberships.filter(state=Membership.STATE_INVITED)
+        return self.memberships.filter(state=BaseMembership.STATE_INVITED)
 
     @property
     def declines(self):
-        return self.memberships.filter(state=Membership.STATE_DECLINED)
+        return self.memberships.filter(state=BaseMembership.STATE_DECLINED)
 
     @property
     def rejections(self):
-        return self.memberships.filter(state=Membership.STATE_REJECTED)
+        return self.memberships.filter(state=BaseMembership.STATE_REJECTED)
 
     @property
     def acceptances(self):
         return self.memberships.filter(state__in=[
-            Membership.STATE_ACCEPTED,
-            Membership.STATE_AUTO_JOINED]
+            BaseMembership.STATE_ACCEPTED,
+            BaseMembership.STATE_AUTO_JOINED]
         )
 
     @property
     def members(self):
-        return self.acceptances.filter(role=Membership.ROLE_MEMBER)
+        return self.acceptances.filter(role=BaseMembership.ROLE_MEMBER)
 
     @property
     def managers(self):
-        return self.acceptances.filter(role=Membership.ROLE_MANAGER)
+        return self.acceptances.filter(role=BaseMembership.ROLE_MANAGER)
 
     @property
     def owners(self):
-        return self.acceptances.filter(role=Membership.ROLE_OWNER)
+        return self.acceptances.filter(role=BaseMembership.ROLE_OWNER)
 
     def is_owner_or_manager(self, user):
         return self.acceptances.filter(
             role__in=[
-                Membership.ROLE_OWNER,
-                Membership.ROLE_MANAGER
+                BaseMembership.ROLE_OWNER,
+                BaseMembership.ROLE_MANAGER
             ],
             user=user
         ).exists()
@@ -138,14 +131,14 @@ class Team(models.Model):
         return self.acceptances.filter(user=user).exists()
 
     def add_member(self, user, role=None, state=None, by=None):
-        # we do this, rather than put the Membership constants in declaration
-        # because Membership is not yet defined
+        # we do this, rather than put the BaseMembership constants in declaration
+        # because BaseMembership is not yet defined
         if role is None:
-            role = Membership.ROLE_MEMBER
+            role = BaseMembership.ROLE_MEMBER
         if state is None:
-            state = Membership.STATE_AUTO_JOINED
+            state = BaseMembership.STATE_AUTO_JOINED
 
-        membership, created = Membership.objects.get_or_create(
+        membership, created = self.memberships.get_or_create(
             team=self,
             user=user,
             defaults={"role": role, "state": state},
@@ -154,9 +147,9 @@ class Team(models.Model):
         return membership
 
     def add_user(self, user, role, by=None):
-        state = Membership.STATE_AUTO_JOINED
-        if self.manager_access == Team.MANAGER_ACCESS_INVITE:
-            state = Membership.STATE_INVITED
+        state = BaseMembership.STATE_AUTO_JOINED
+        if self.manager_access == BaseTeam.MANAGER_ACCESS_INVITE:
+            state = BaseMembership.STATE_INVITED
         membership, _ = self.memberships.get_or_create(
             user=user,
             defaults={"role": role, "state": state}
@@ -169,7 +162,7 @@ class Team(models.Model):
             invite = JoinInvitation.invite(from_user, to_email, message, send=False)
             membership, _ = self.memberships.get_or_create(
                 invite=invite,
-                defaults={"role": role, "state": Membership.STATE_INVITED}
+                defaults={"role": role, "state": BaseMembership.STATE_INVITED}
             )
             invite.send_invite()
             signals.invited_user.send(sender=self, membership=membership, by=from_user)
@@ -178,7 +171,7 @@ class Team(models.Model):
     def for_user(self, user):
         try:
             return self.memberships.get(user=user)
-        except Membership.DoesNotExist:
+        except ObjectDoesNotExist:
             pass
 
     def state_for(self, user):
@@ -194,19 +187,42 @@ class Team(models.Model):
         if membership:
             return membership.role
 
+
+class SimpleTeam(BaseTeam):
+
+    class Meta:
+        verbose_name = _("Simple Team")
+        verbose_name_plural = _("Simple Teams")
+
+
+@python_2_unicode_compatible
+class Team(BaseTeam):
+
+    slug = models.SlugField(unique=True)
+    name = models.CharField(max_length=100, verbose_name=_("name"))
+    avatar = models.ImageField(upload_to=avatar_upload, blank=True, verbose_name=_("avatar"))
+    description = models.TextField(blank=True, verbose_name=_("description"))
+    creator = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="teams_created", verbose_name=_("creator"))
+    created = models.DateTimeField(default=timezone.now, editable=False, verbose_name=_("created"))
+
+    class Meta:
+        verbose_name = _("Team")
+        verbose_name_plural = _("Teams")
+
+    def get_absolute_url(self):
+        return reverse("team_detail", args=[self.slug])
+
+    def __str__(self):
+        return self.name
+
     def save(self, *args, **kwargs):
         if not self.id:
             self.slug = create_slug(self.name)
         self.full_clean()
         super(Team, self).save(*args, **kwargs)
 
-    class Meta:
-        verbose_name = _("Team")
-        verbose_name_plural = _("Teams")
 
-
-@python_2_unicode_compatible
-class Membership(models.Model):
+class BaseMembership(models.Model):
 
     STATE_APPLIED = "applied"
     STATE_INVITED = "invited"
@@ -234,25 +250,25 @@ class Membership(models.Model):
         (ROLE_OWNER, _("owner"))
     ]
 
-    team = models.ForeignKey(Team, related_name="memberships", verbose_name=_("team"))
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="memberships", null=True, blank=True, verbose_name=_("user"))
-    invite = models.ForeignKey(JoinInvitation, related_name="memberships", null=True, blank=True, verbose_name=_("invite"))
     state = models.CharField(max_length=20, choices=STATE_CHOICES, verbose_name=_("state"))
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default=ROLE_MEMBER, verbose_name=_("role"))
     created = models.DateTimeField(default=timezone.now, verbose_name=_("created"))
 
+    class Meta:
+        abstract = True
+
     def is_owner(self):
-        return self.role == Membership.ROLE_OWNER
+        return self.role == BaseMembership.ROLE_OWNER
 
     def is_manager(self):
-        return self.role == Membership.ROLE_MANAGER
+        return self.role == BaseMembership.ROLE_MANAGER
 
     def is_member(self):
-        return self.role == Membership.ROLE_MEMBER
+        return self.role == BaseMembership.ROLE_MEMBER
 
     def promote(self, by):
         role = self.team.role_for(by)
-        if role in [Membership.ROLE_MANAGER, Membership.ROLE_OWNER]:
+        if role in [BaseMembership.ROLE_MANAGER, BaseMembership.ROLE_OWNER]:
             if self.role == Membership.ROLE_MEMBER:
                 self.role = Membership.ROLE_MANAGER
                 self.save()
@@ -324,6 +340,30 @@ class Membership(models.Model):
     def invitee(self):
         return self.user or self.invite.to_user_email()
 
+
+@python_2_unicode_compatible
+class SimpleMembership(BaseMembership):
+
+    team = models.ForeignKey(SimpleTeam, related_name="memberships", verbose_name=_("team"))
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="simple_memberships", null=True, blank=True, verbose_name=_("user"))
+    invite = models.ForeignKey(JoinInvitation, related_name="simple_memberships", null=True, blank=True, verbose_name=_("invite"))
+
+    def __str__(self):
+        return "{0} in {1}".format(self.user, self.team)
+
+    class Meta:
+        unique_together = [("team", "user", "invite")]
+        verbose_name = _("Simple Membership")
+        verbose_name_plural = _("Simple Memberships")
+
+
+@python_2_unicode_compatible
+class Membership(BaseMembership):
+
+    team = models.ForeignKey(Team, related_name="memberships", verbose_name=_("team"))
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="memberships", null=True, blank=True, verbose_name=_("user"))
+    invite = models.ForeignKey(JoinInvitation, related_name="memberships", null=True, blank=True, verbose_name=_("invite"))
+
     def __str__(self):
         return "{0} in {1}".format(self.user, self.team)
 
@@ -333,4 +373,5 @@ class Membership(models.Model):
         verbose_name_plural = _("Memberships")
 
 
+reversion.register(SimpleMembership)
 reversion.register(Membership)
