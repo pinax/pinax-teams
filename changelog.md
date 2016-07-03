@@ -1,5 +1,8 @@
 # Change Log
 
+## 0.12
+* Add `SimpleTeam` and `SimpleMembership` models [PR #46](https://github.com/pinax/pinax-teams/pull/46)
+
 ## 0.11.5
 
 * Add initiating user to membership signals [PR #42](https://github.com/pinax/pinax-teams/pull/42)
