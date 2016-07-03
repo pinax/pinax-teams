@@ -1,5 +1,7 @@
 # Change Log
 
+## 0.12
+
 ## 0.11.5
 
 * Add initiating user to membership signals [PR #42](https://github.com/pinax/pinax-teams/pull/42)
