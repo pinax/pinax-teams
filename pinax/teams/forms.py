@@ -35,7 +35,7 @@ class TeamForm(forms.ModelForm):
         slug = create_slug(self.cleaned_data["name"])
         if self.instance.pk is None and Team.objects.filter(slug=slug).exists():
             raise forms.ValidationError(MESSAGE_STRINGS["slug-exists"])
-        if self.cleaned_data["name"].lower() in settings.TEAM_NAME_BLACKLIST:
+        if self.cleaned_data["name"].lower() in settings.TEAMS_NAME_BLACKLIST:
             raise forms.ValidationError(MESSAGE_STRINGS["on-team-blacklist"])
         return self.cleaned_data["name"]
 
@@ -63,7 +63,9 @@ class TeamInviteUserForm(forms.Form):
                 raise forms.ValidationError(MESSAGE_STRINGS["user-member-exists"])
         except User.DoesNotExist:
             try:
-                invitee = User.objects.get(username=self.cleaned_data["invitee"])
+                # search by USERNAME_FIELD
+                params = {User.USERNAME_FIELD: self.cleaned_data["invitee"]}
+                invitee = User.objects.get(**params)
                 if self.team.is_on_team(invitee):
                     raise forms.ValidationError(MESSAGE_STRINGS["user-member-exists"])
             except User.DoesNotExist:

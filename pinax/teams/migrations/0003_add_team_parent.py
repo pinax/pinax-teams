@@ -7,7 +7,7 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('pinax_teams', '0001_initial'),
+        ('pinax_teams', '0002_add_simple_model'),
     ]
 
     operations = [
