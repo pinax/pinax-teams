@@ -38,7 +38,6 @@ def create_slug(name, parent=None):
     return slug[:50]
 
 
-@python_2_unicode_compatible
 class BaseTeam(models.Model):
 
     MEMBER_ACCESS_OPEN = "open"
