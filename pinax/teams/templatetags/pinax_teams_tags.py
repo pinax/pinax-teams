@@ -49,7 +49,7 @@ def ancestors_for(context, team=None):
     for ancestor in team.ancestors:
         ancestors.append({
             "team": ancestor,
-            "can_manage": ancestor.role_for(context["user"]) in [Membership.ROLE_MANAGER, Membership.ROLE_OWNER]
+            "can_manage": is_managed_by(ancestor, context["user"])
         })
     context["ancestors"] = ancestors
     return ancestors
@@ -64,7 +64,7 @@ def descendants_for(context, team=None):
     for descendant in team.children.order_by("slug"):
         descendants.append({
             "team": descendant,
-            "can_manage": descendant.role_for(context["user"]) in [Membership.ROLE_MANAGER, Membership.ROLE_OWNER]
+            "can_manage": is_managed_by(descendant, context["user"])
         })
     return descendants
 
@@ -76,6 +76,10 @@ def get_team_breadcrumbs(context):
     return context
 
 
-@register.filter()
 def is_managed_by(team, user):
     return team.role_for(user) in [Membership.ROLE_MANAGER, Membership.ROLE_OWNER]
+
+
+@register.filter(name="is_managed_by")
+def is_managed_by_as_filter(team, user):
+    return is_managed_by(team, user)
