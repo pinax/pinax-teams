@@ -60,17 +60,21 @@ def ancestors_for(context, team=None):
 
 
 @register.assignment_tag(takes_context=True)
-def descendants_for(context, team=None):
+def children_for(context, team=None):
+    """
+    Retrieves the children of a given team and indicates
+    if the user can manage each child
+    """
     if team is None:
         team = context["team"]
 
-    descendants = []
-    for descendant in team.children.order_by("slug"):
-        descendants.append({
-            "team": descendant,
-            "can_manage": is_managed_by(descendant, context["user"])
+    children = []
+    for child in team.children.order_by("slug"):
+        children.append({
+            "team": child,
+            "can_manage": is_managed_by(child, context["user"])
         })
-    return descendants
+    return children
 
 
 # @@@ document template
