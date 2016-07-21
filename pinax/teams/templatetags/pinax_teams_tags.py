@@ -42,6 +42,10 @@ def available_teams(parser, token):
 
 @register.assignment_tag(takes_context=True)
 def ancestors_for(context, team=None):
+    """
+    Retrives the ancestors for a given team and indicates
+    if the user can manage each ancestor
+    """
     if team is None:
         team = context["team"]
 
