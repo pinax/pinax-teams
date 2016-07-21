@@ -113,6 +113,16 @@ class BaseTeam(models.Model):
         chain.reverse()
         return chain
 
+    @property
+    def descendants(self):
+        """
+        Return descendants of a team
+        """
+        _descendants = []
+        for child in self.children.all()
+            _descendants.extend(child.descendants)
+        return _descendants
+
 
     @property
     def full_name(self):
