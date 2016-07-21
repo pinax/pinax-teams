@@ -89,23 +89,30 @@ class BaseTeam(models.Model):
         state = self.state_for(user)
         return self.member_access == BaseTeam.MEMBER_ACCESS_APPLICATION and state is None
 
-    #@@@
-    def get_root_team(team):
+    def get_root_team(self):
+        """
+        Returns the top-most parent for a team
+        """
+        team = self
         while getattr(team, "parent"):
             team = team.parent
         return team
 
-    # @@@
     @property
-    def ancestors(team):
+    def ancestors(self):
+        """
+        Returns the parent(s) of a team
+        """
+        team = self
         chain = []
         while getattr(team, "parent"):
             chain.append(team)
             team = team.parent
         chain.append(team)
-        #filo
+        # first in, last out
         chain.reverse()
         return chain
+
 
     @property
     def full_name(self):
