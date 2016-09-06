@@ -1,5 +1,8 @@
 # Change Log
 
+## 0.12.1
+* Update `context_urls.py` to reference the correct views
+
 ## 0.12
 * Add `SimpleTeam` and `SimpleMembership` models [PR #46](https://github.com/pinax/pinax-teams/pull/46)
 
