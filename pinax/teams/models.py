@@ -91,6 +91,10 @@ class BaseTeam(models.Model):
         return self.memberships.filter(state=BaseMembership.STATE_REJECTED)
 
     @property
+    def waitlisted(self):
+        return self.memberships.filter(state=BaseMembership.STATE_WAITLISTED)
+
+    @property
     def acceptances(self):
         return self.memberships.filter(state__in=[
             BaseMembership.STATE_ACCEPTED,
