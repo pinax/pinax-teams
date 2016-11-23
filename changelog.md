@@ -1,6 +1,9 @@
 # Change Log
 
 ## 0.12.1
+* BI: Move `WSGITeamMiddleware` to its own module to resolve issues with the custom app label
+
+## 0.12.1
 * Update `context_urls.py` to reference the correct views
 
 ## 0.12
