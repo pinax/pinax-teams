@@ -9,7 +9,7 @@ from .hooks import hookset
 
 def members_count(obj):
     return obj.memberships.count()
-members_count.short_description = _("Members Count")
+members_count.short_description = _("Members Count")  # noqa
 
 
 admin.site.register(
