@@ -8,7 +8,7 @@ Installation
 
     pip install pinax-teams
 
-* Add ``teams`` to your ``INSTALLED_APPS`` setting::
+* Add ``pinax.teams`` to your ``INSTALLED_APPS`` setting::
 
     INSTALLED_APPS = (
         # ...
@@ -20,7 +20,7 @@ Installation
     )
 
 
-* Add urls:
+* Add urls::
 
     # urls.py
     url(r"^teams/", include("pinax.teams.urls")),
