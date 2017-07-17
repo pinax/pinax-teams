@@ -145,6 +145,10 @@ class BaseTeam(models.Model):
         return self.memberships.filter(state=BaseMembership.STATE_REJECTED)
 
     @property
+    def waitlisted(self):
+        return self.memberships.filter(state=BaseMembership.STATE_WAITLISTED)
+
+    @property
     def acceptances(self):
         return self.memberships.filter(state__in=[
             BaseMembership.STATE_ACCEPTED,
@@ -300,6 +304,7 @@ class BaseMembership(models.Model):
     STATE_DECLINED = "declined"
     STATE_REJECTED = "rejected"
     STATE_ACCEPTED = "accepted"
+    STATE_WAITLISTED = "waitlisted"
     STATE_AUTO_JOINED = "auto-joined"
 
     ROLE_MEMBER = "member"
@@ -312,6 +317,7 @@ class BaseMembership(models.Model):
         (STATE_DECLINED, _("declined")),
         (STATE_REJECTED, _("rejected")),
         (STATE_ACCEPTED, _("accepted")),
+        (STATE_WAITLISTED, _("waitlisted")),
         (STATE_AUTO_JOINED, _("auto joined"))
     ]
 
