@@ -119,7 +119,7 @@ class BaseTeam(models.Model):
         Return descendants of a team
         """
         _descendants = []
-        for child in self.children.all()
+        for child in self.children.all():
             _descendants.extend(child.descendants)
         return _descendants
 
