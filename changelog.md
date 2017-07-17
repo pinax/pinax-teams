@@ -1,6 +1,14 @@
 # Change Log
 
+## 0.12.2
+* BI: Move `WSGITeamMiddleware` to it's own module to resolve issues with the custom app label.
+This BI change was made in 0.12.2 as `WSGITeamMiddleware` had not been documented or demonstrated.
+
+## 0.12.1
+* Update `context_urls.py` to reference the correct views
+
 ## 0.12
+* Add `SimpleTeam` and `SimpleMembership` models [PR #46](https://github.com/pinax/pinax-teams/pull/46)
 
 ## 0.11.5
 
