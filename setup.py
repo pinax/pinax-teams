@@ -23,7 +23,7 @@ setup(
     tests_require=[
         "Django>=1.8",
         "django-reversion>=1.8.1",
-        "pinax-invitations==4.0.4",  # 5.0.0 changes label from invitations to pinax_invitations
+        "pinax-invitations>=5.0.0,<6.0.0",
         "unicode-slugify>=0.1.1",
         "Pillow>=2.3.0",
         "django-user-accounts>=1.3",
@@ -32,7 +32,7 @@ setup(
     install_requires=[
         "Django>=1.8",
         "django-reversion>=1.8.1",
-        "pinax-invitations==4.0.4",
+        "pinax-invitations>=5.0.0,<6.0.0",
         "unicode-slugify>=0.1.1",
         "Pillow>=2.3.0",
         "django-user-accounts>=1.3",
