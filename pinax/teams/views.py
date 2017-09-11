@@ -61,6 +61,7 @@ class TeamListView(ListView):
     context_object_name = "teams"
     template_name = "pinax/teams/team_list.html"
 
+
 @team_required
 @login_required
 def team_update(request):

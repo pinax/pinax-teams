@@ -123,7 +123,6 @@ class BaseTeam(models.Model):
             _descendants.extend(child.descendants)
         return _descendants
 
-
     @property
     def full_name(self):
         return " : ".join([a.name for a in self.ancestors])
