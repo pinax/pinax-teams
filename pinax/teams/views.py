@@ -2,7 +2,6 @@ import json
 
 from django.http import Http404, HttpResponse, HttpResponseRedirect, HttpResponseForbidden, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
-from django.template import RequestContext
 from django.template.loader import render_to_string
 from django.utils.decorators import method_decorator
 from django.views.decorators.http import require_POST
@@ -240,7 +239,7 @@ class TeamInviteView(FormView):
                     "invite_form": self.get_unbound_form(),
                     "team": self.team
                 },
-                context_instance=RequestContext(self.request)
+                request=self.request
             )
         }
 
@@ -264,7 +263,7 @@ class TeamInviteView(FormView):
                             "membership": membership,
                             "team": self.team
                         },
-                        context_instance=RequestContext(self.request)
+                        request=self.request
                     )
                 }
             })
@@ -288,7 +287,7 @@ class TeamInviteView(FormView):
             "html": render_to_string("pinax/teams/_invite_form.html", {
                 "invite_form": form,
                 "team": self.team
-            }, context_instance=RequestContext(self.request))
+            }, request=self.request)
         }
         return self.render_to_response(data)
 
@@ -319,7 +318,7 @@ def team_member_resend_invite(request, pk):
                 "membership": membership,
                 "team": request.team
             },
-            context_instance=RequestContext(request)
+            request=request
         )
     }
     return HttpResponse(json.dumps(data), content_type="application/json")
@@ -337,7 +336,7 @@ def team_member_promote(request, pk):
                 "membership": membership,
                 "team": request.team
             },
-            context_instance=RequestContext(request)
+            request=request
         )
     }
     return HttpResponse(json.dumps(data), content_type="application/json")
@@ -355,7 +354,7 @@ def team_member_demote(request, pk):
                 "membership": membership,
                 "team": request.team
             },
-            context_instance=RequestContext(request)
+            request=request
         )
     }
     return HttpResponse(json.dumps(data), content_type="application/json")
