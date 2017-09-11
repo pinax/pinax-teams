@@ -24,10 +24,11 @@ admin.site.register(
         "description",
         "member_access",
         "manager_access",
-        "creator"
+        "creator",
+        "parent",
     ],
     prepopulated_fields={"slug": ("name",)},
-    raw_id_fields=["creator"]
+    raw_id_fields=["creator", "parent"]
 )
 
 

@@ -13,6 +13,7 @@ MESSAGE_STRINGS = {
     "on-team-blacklist": "You can not create a team by this name",
     "user-member-exists": "User already on team.",
     "invitee-member-exists": "Invite already sent.",
+    "self-referencing-parent": "A team cannot be a parent of itself.",
 }
 
 

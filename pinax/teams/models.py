@@ -5,6 +5,7 @@ import uuid
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
@@ -18,14 +19,23 @@ from . import signals
 from .hooks import hookset
 
 
+MESSAGE_STRINGS = hookset.get_message_strings()
+
+
 def avatar_upload(instance, filename):
     ext = filename.split(".")[-1]
     filename = "%s.%s" % (uuid.uuid4(), ext)
     return os.path.join("avatars", filename)
 
 
-def create_slug(name):
-    return slugify(name)[:50]
+def create_slug(name, parent=None):
+    slug = slugify(name)
+    if parent:
+        slug = "{parent_pk}-{slug}".format(
+            parent_pk=parent.pk,
+            slug=slug,
+        )
+    return slug[:50]
 
 
 class BaseTeam(models.Model):
@@ -50,11 +60,16 @@ class BaseTeam(models.Model):
 
     member_access = models.CharField(max_length=20, choices=MEMBER_ACCESS_CHOICES, verbose_name=_("member access"))
     manager_access = models.CharField(max_length=20, choices=MANAGER_ACCESS_CHOICES, verbose_name=_("manager access"))
+    parent = models.ForeignKey("self", blank=True, null=True, related_name="children")
 
     class Meta:
         abstract = True
         verbose_name = _("Base")
         verbose_name_plural = _("Bases")
+
+    def clean(self):
+        if self.pk and self.pk == self.parent_id:
+            raise ValidationError({"parent": MESSAGE_STRINGS["self-referencing-parent"]})
 
     def can_join(self, user):
         state = self.state_for(user)
@@ -73,6 +88,44 @@ class BaseTeam(models.Model):
     def can_apply(self, user):
         state = self.state_for(user)
         return self.member_access == BaseTeam.MEMBER_ACCESS_APPLICATION and state is None
+
+    def get_root_team(self):
+        """
+        Returns the top-most parent for a team
+        """
+        team = self
+        while getattr(team, "parent"):
+            team = team.parent
+        return team
+
+    @property
+    def ancestors(self):
+        """
+        Returns the parent(s) of a team
+        """
+        team = self
+        chain = []
+        while getattr(team, "parent"):
+            chain.append(team)
+            team = team.parent
+        chain.append(team)
+        # first in, last out
+        chain.reverse()
+        return chain
+
+    @property
+    def descendants(self):
+        """
+        Return descendants of a team
+        """
+        _descendants = []
+        for child in self.children.all():
+            _descendants.extend(child.descendants)
+        return _descendants
+
+    @property
+    def full_name(self):
+        return " : ".join([a.name for a in self.ancestors])
 
     @property
     def applicants(self):
@@ -173,10 +226,27 @@ class BaseTeam(models.Model):
             return membership
 
     def for_user(self, user):
-        try:
-            return self.memberships.get(user=user)
-        except ObjectDoesNotExist:
-            pass
+        """
+        Return the first membership found for the current team and user
+        or for any of the team's parents and the user
+
+        @@@ we may decide to explicitly add membership for "children" if a
+        user is a manager or member of a parent org
+        """
+        attr = "_membership_for_user"
+
+        if hasattr(self, attr) is False:
+            team = self
+            membership = None
+            while team:
+                try:
+                    membership = team.memberships.get(user=user)
+                    break
+                except ObjectDoesNotExist:
+                    team = team.parent
+            # @@@ care about the type of membership if retrieved from a parent
+            setattr(self, attr, membership)
+        return getattr(self, attr)
 
     def state_for(self, user):
         membership = self.for_user(user=user)
@@ -221,7 +291,7 @@ class Team(BaseTeam):
 
     def save(self, *args, **kwargs):
         if not self.id:
-            self.slug = create_slug(self.name)
+            self.slug = create_slug(self.name, self.parent)
         self.full_clean()
         super(Team, self).save(*args, **kwargs)
 
