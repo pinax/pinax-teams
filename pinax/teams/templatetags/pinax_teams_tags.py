@@ -78,7 +78,7 @@ def children_for(context, team=None):
 
 
 # @@@ document template
-@register.inclusion_tag("teams/_breadcrumbs.html", takes_context=True)
+@register.inclusion_tag("pinax/teams/_breadcrumbs.html", takes_context=True)
 def get_team_breadcrumbs(context):
     context["ancestors"] = ancestors_for(context)
     return context
