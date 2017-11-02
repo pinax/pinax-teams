@@ -269,6 +269,14 @@ class ManagerInviteMemberApplicationTests(BaseTeamTests):
         membership.save()
         self.assertFalse(team.can_join(paltman))
 
+    def test_add_member_twice_does_not_duplicate(self):
+        team = self._create_team()
+        self.assertEqual(team.memberships.count(), 1)
+        paltman = User.objects.create_user(username="paltman")
+        team.add_member(paltman)
+        team.add_member(paltman, role=Membership.STATE_APPLIED)
+        self.assertEqual(team.memberships.count(), 2)
+
 
 class ManagerInviteMemberInvitationTests(BaseTeamTests):
 
