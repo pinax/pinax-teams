@@ -57,7 +57,7 @@ setup(
     description="An app for Django sites that supports open, by invitation, and by application teams",
     name="pinax-teams",
     long_description=LONG_DESCRIPTION,
-    version="0.14.0",
+    version="0.14.1",
     url="http://pinax-teams.rtfd.org/",
     license="MIT",
     packages=find_packages(),
