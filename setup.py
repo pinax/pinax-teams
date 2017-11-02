@@ -52,12 +52,12 @@ This app was developed as part of the Pinax ecosystem but is just a Django app a
 
 
 setup(
-    author="",
-    author_email="",
+    author="Pinax Developers",
+    author_email="developers@pinaxproject.com",
     description="An app for Django sites that supports open, by invitation, and by application teams",
     name="pinax-teams",
     long_description=LONG_DESCRIPTION,
-    version="0.13.0",
+    version="0.14.0",
     url="http://pinax-teams.rtfd.org/",
     license="MIT",
     packages=find_packages(),
