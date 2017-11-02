@@ -3,7 +3,7 @@ import django
 
 DEBUG = True
 USE_TZ = True
-TIME_ZONE = 'UTC'
+TIME_ZONE = "UTC"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
