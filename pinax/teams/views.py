@@ -1,27 +1,31 @@
 import json
 
-from django.http import Http404, HttpResponse, HttpResponseRedirect, HttpResponseForbidden, JsonResponse
-from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+from django.contrib.auth import get_user_model
+from django.http import (
+    Http404,
+    HttpResponse,
+    HttpResponseForbidden,
+    HttpResponseRedirect,
+    JsonResponse,
+)
+from django.shortcuts import get_object_or_404, redirect, render
 from django.template import RequestContext
 from django.template.loader import render_to_string
 from django.utils.decorators import method_decorator
 from django.views.decorators.http import require_POST
+from django.views.generic import FormView, ListView, TemplateView
 from django.views.generic.edit import CreateView
-from django.views.generic import ListView, FormView, TemplateView
-
-from django.contrib import messages
-from django.contrib.auth import get_user_model
 
 from account.decorators import login_required
 from account.mixins import LoginRequiredMixin
 from account.views import SignupView
 from six import string_types
 
-from .decorators import team_required, manager_required
-from .forms import TeamInviteUserForm, TeamForm, TeamSignupForm
+from .decorators import manager_required, team_required
+from .forms import TeamForm, TeamInviteUserForm, TeamSignupForm
 from .hooks import hookset
-from .models import Team, Membership
-
+from .models import Membership, Team
 
 MESSAGE_STRINGS = hookset.get_message_strings()
 

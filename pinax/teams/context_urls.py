@@ -5,7 +5,6 @@ from django.conf.urls import patterns, url
 
 from . import views
 
-
 urlpatterns = patterns(
     # team specific
     url(r"^detail/$", views.team_detail, name="team_detail"),

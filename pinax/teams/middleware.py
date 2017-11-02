@@ -5,7 +5,7 @@ from django.http import Http404
 from account.utils import handle_redirect_to_login
 
 from .conf import settings
-from .models import Team, Membership
+from .models import Membership, Team
 
 
 def check_team_allowed(request):

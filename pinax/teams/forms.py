@@ -1,14 +1,12 @@
 from django import forms
-from django.utils.translation import ugettext_lazy as _
-
 from django.contrib.auth import get_user_model
+from django.utils.translation import ugettext_lazy as _
 
 from account.forms import SignupForm
 
 from .conf import settings
 from .hooks import hookset
 from .models import Membership, Team, create_slug
-
 
 MESSAGE_STRINGS = hookset.get_message_strings()
 

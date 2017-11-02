@@ -1,9 +1,9 @@
-from django.dispatch import receiver
 from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 from pinax.invitations.signals import invite_accepted, joined_independently
 
-from .models import Team, Membership
+from .models import Membership, Team
 
 
 @receiver(post_save, sender=Team)

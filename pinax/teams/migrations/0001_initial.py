@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.db import models, migrations
-import pinax.teams.models
 import django.utils.timezone
 from django.conf import settings
+from django.db import migrations, models
+
+import pinax.teams.models
 
 
 class Migration(migrations.Migration):

@@ -8,7 +8,7 @@ from django.utils.decorators import available_attrs
 
 from account.decorators import login_required
 
-from .models import Team, Membership
+from .models import Membership, Team
 
 
 def team_required(func=None):

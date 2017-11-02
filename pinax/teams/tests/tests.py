@@ -1,12 +1,10 @@
 from __future__ import unicode_literals
 
+from django.contrib.auth.models import User
 from django.test import TestCase
 
-from django.contrib.auth.models import User
-
-from pinax.teams.models import Team, Membership, avatar_upload
-
 import pinax.teams.receivers  # noqa - for django 1.6 tests
+from pinax.teams.models import Membership, Team, avatar_upload
 
 
 class BaseTeamTests(TestCase):

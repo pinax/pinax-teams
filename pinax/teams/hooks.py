@@ -2,7 +2,6 @@ from django.db.models import Q
 
 from .compat import reverse
 
-
 MESSAGE_STRINGS = {
     "joined-team": "Joined team.",
     "left-team": "Left team.",

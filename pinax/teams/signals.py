@@ -1,6 +1,5 @@
 import django.dispatch
 
-
 added_member = django.dispatch.Signal(providing_args=["membership", "by"])
 invited_user = django.dispatch.Signal(providing_args=["membership", "by"])
 promoted_member = django.dispatch.Signal(providing_args=["membership", "by"])
