@@ -4,7 +4,6 @@ import uuid
 
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
-from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
@@ -15,6 +14,7 @@ from reversion import revisions as reversion
 from slugify import slugify
 
 from . import signals
+from .compat import reverse
 from .hooks import hookset
 
 
@@ -206,7 +206,7 @@ class Team(BaseTeam):
     name = models.CharField(max_length=100, verbose_name=_("name"))
     avatar = models.ImageField(upload_to=avatar_upload, blank=True, verbose_name=_("avatar"))
     description = models.TextField(blank=True, verbose_name=_("description"))
-    creator = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="teams_created", verbose_name=_("creator"))
+    creator = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="teams_created", verbose_name=_("creator"), on_delete=models.CASCADE)
     created = models.DateTimeField(default=timezone.now, editable=False, verbose_name=_("created"))
 
     class Meta:
@@ -214,7 +214,7 @@ class Team(BaseTeam):
         verbose_name_plural = _("Teams")
 
     def get_absolute_url(self):
-        return reverse("team_detail", args=[self.slug])
+        return reverse("pinax_teams:team_detail", args=[self.slug])
 
     def __str__(self):
         return self.name
@@ -350,9 +350,9 @@ class BaseMembership(models.Model):
 @python_2_unicode_compatible
 class SimpleMembership(BaseMembership):
 
-    team = models.ForeignKey(SimpleTeam, related_name="memberships", verbose_name=_("team"))
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="simple_memberships", null=True, blank=True, verbose_name=_("user"))
-    invite = models.ForeignKey(JoinInvitation, related_name="simple_memberships", null=True, blank=True, verbose_name=_("invite"))
+    team = models.ForeignKey(SimpleTeam, related_name="memberships", verbose_name=_("team"), on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="simple_memberships", null=True, blank=True, verbose_name=_("user"), on_delete=models.CASCADE)
+    invite = models.ForeignKey(JoinInvitation, related_name="simple_memberships", null=True, blank=True, verbose_name=_("invite"), on_delete=models.CASCADE)
 
     def __str__(self):
         return "{0} in {1}".format(self.user, self.team)
@@ -366,9 +366,9 @@ class SimpleMembership(BaseMembership):
 @python_2_unicode_compatible
 class Membership(BaseMembership):
 
-    team = models.ForeignKey(Team, related_name="memberships", verbose_name=_("team"))
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="memberships", null=True, blank=True, verbose_name=_("user"))
-    invite = models.ForeignKey(JoinInvitation, related_name="memberships", null=True, blank=True, verbose_name=_("invite"))
+    team = models.ForeignKey(Team, related_name="memberships", verbose_name=_("team"), on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="memberships", null=True, blank=True, verbose_name=_("user"), on_delete=models.CASCADE)
+    invite = models.ForeignKey(JoinInvitation, related_name="memberships", null=True, blank=True, verbose_name=_("invite"), on_delete=models.CASCADE)
 
     def __str__(self):
         return "{0} in {1}".format(self.user, self.team)

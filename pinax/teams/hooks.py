@@ -1,6 +1,6 @@
 from django.db.models import Q
 
-from django.core.urlresolvers import reverse
+from .compat import reverse
 
 
 MESSAGE_STRINGS = {

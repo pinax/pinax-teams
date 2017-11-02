@@ -1,6 +1,4 @@
 include AUTHORS
 include LICENSE
-include README.rst
+include README.md
 recursive-include pinax/teams/locale *
-recursive-include pinax/teams/static *
-recursive-include pinax/teams/templates *

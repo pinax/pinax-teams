@@ -3,6 +3,9 @@ from django.conf.urls import url
 from . import views
 
 
+app_name = "pinax_teams"
+
+
 urlpatterns = [
     # overall
     url(r"^$", views.TeamListView.as_view(), name="team_list"),

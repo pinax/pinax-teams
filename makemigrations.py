@@ -4,42 +4,9 @@ import sys
 
 import django
 
-from django.conf import settings
-
-
-DEFAULT_SETTINGS = dict(
-    DEBUG=True,
-    USE_TZ=True,
-    TIME_ZONE='UTC',
-    DATABASES={
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": ":memory:"
-        }
-    },
-    MIDDLEWARE_CLASSES=[
-        "django.contrib.sessions.middleware.SessionMiddleware",
-        "django.contrib.auth.middleware.AuthenticationMiddleware",
-        "django.contrib.messages.middleware.MessageMiddleware"
-    ],
-    ROOT_URLCONF="pinax.teams.urls",
-    INSTALLED_APPS=[
-        "django.contrib.auth",
-        "django.contrib.contenttypes",
-        "django.contrib.sessions",
-        "django.contrib.sites",
-        "account",
-        "pinax.invitations",
-        "pinax.teams",
-    ],
-    SITE_ID=1,
-)
-
 
 def run(*args):
-    if not settings.configured:
-        settings.configure(**DEFAULT_SETTINGS)
-
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pinax.teams.tests.settings")
     django.setup()
 
     parent = os.path.dirname(os.path.abspath(__file__))
