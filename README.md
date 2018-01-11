@@ -200,7 +200,7 @@ This BI change was made in 0.12.2 as `WSGITeamMiddleware` had not been documente
 
 **Backwards Incompatible Changes**
 
-* `TEAM_NAME_BLACKLIST` has been renamed to `TEAMS_NAME_BLACKLIST` for consistency with other application settings
+* `TEAM_NAME_BLACKLIST` has been renamed to `PINAX_TEAMS_NAME_BLACKLIST` for consistency with other application settings
 
 
 ## Contribute
