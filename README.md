@@ -1,6 +1,6 @@
 ![](http://pinaxproject.com/pinax-design/patches/pinax-teams.svg)
 
-# Pinax Invitations
+# Pinax Teams
 
 [![](https://img.shields.io/pypi/v/pinax-teams.svg)](https://pypi.python.org/pypi/pinax-teams/)
 
@@ -14,8 +14,6 @@
 [![](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 ## Table of Contents
-
-The `pinax-teams` documentation is currently under construction. If you would like to help us write documentation, please join our Slack team and let us know! 
 
 * [About Pinax](#about-pinax)
 * [Overview](#overview)
@@ -56,6 +54,8 @@ Pinax is an open-source platform built on the Django Web Framework. It is an eco
 * pinax-invitations
 * six
 * unicode-slugify
+
+See [`setup.py`](https://github.com/pinax/pinax-teams/blob/master/setup.py) for specific required versions of these packages.
 
 
 #### Supported Django and Python versions
