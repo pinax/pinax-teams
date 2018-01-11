@@ -38,10 +38,10 @@ class TeamMiddleware(object):
                 request.team = team
         else:
             request.team = None
-        if request.user.is_authenticated and settings.TEAMS_PROFILE_MODEL:
+        if request.user.is_authenticated and settings.PINAX_TEAMS_PROFILE_MODEL:
             if re.search(r"^/teams/[\w-]+/account/signup/", request.path):
                 return None
-            profiles = settings.TEAMS_PROFILE_MODEL.objects.filter(
+            profiles = settings.PINAX_TEAMS_PROFILE_MODEL.objects.filter(
                 user=request.user
             )
             request.user.teams = profiles.filter(
@@ -53,7 +53,7 @@ class TeamMiddleware(object):
             ).distinct()
             try:
                 request.profile = profiles.get(team=request.team)
-            except settings.TEAMS_PROFILE_MODEL.DoesNotExist:
+            except settings.PINAX_TEAMS_PROFILE_MODEL.DoesNotExist:
                 raise Http404()
         else:
             if team_slug is not None:
