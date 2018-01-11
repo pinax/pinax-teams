@@ -24,7 +24,7 @@ class Migration(migrations.Migration):
                 ('state', models.CharField(choices=[(b'applied', 'applied'), (b'invited', 'invited'), (b'declined', 'declined'), (b'rejected', 'rejected'), (b'accepted', 'accepted'), (b'auto-joined', 'auto joined')], max_length=20, verbose_name='state')),
                 ('role', models.CharField(choices=[(b'member', 'member'), (b'manager', 'manager'), (b'owner', 'owner')], default=b'member', max_length=20, verbose_name='role')),
                 ('created', models.DateTimeField(default=django.utils.timezone.now, verbose_name='created')),
-                ('invite', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='simple_memberships', to='pinax_invitations.JoinInvitation', verbose_name='invite')),
+                ('invite', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='simple_memberships', to='pinax_invitations.JoinInvitation', verbose_name='invite')),
             ],
             options={
                 'verbose_name': 'Simple Membership',
@@ -55,7 +55,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='simplemembership',
             name='user',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='simple_memberships', to=settings.AUTH_USER_MODEL, verbose_name='user'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='simple_memberships', to=settings.AUTH_USER_MODEL, verbose_name='user'),
         ),
         migrations.AlterUniqueTogether(
             name='simplemembership',

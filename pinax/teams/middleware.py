@@ -29,7 +29,7 @@ class TeamMiddleware(object):
             try:
                 team = Team.objects.get(slug=team_slug)
             except Team.DoesNotExist:
-                if request.user.is_authenticated():
+                if request.user.is_authenticated:
                     request.user.teams = None
                     raise Http404()
                 else:
@@ -38,7 +38,7 @@ class TeamMiddleware(object):
                 request.team = team
         else:
             request.team = None
-        if request.user.is_authenticated() and settings.TEAMS_PROFILE_MODEL:
+        if request.user.is_authenticated and settings.TEAMS_PROFILE_MODEL:
             if re.search(r"^/teams/[\w-]+/account/signup/", request.path):
                 return None
             profiles = settings.TEAMS_PROFILE_MODEL.objects.filter(

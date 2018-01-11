@@ -1,6 +1,5 @@
 from django.db.models import Q
-
-from .compat import reverse
+from django.urls import reverse
 
 MESSAGE_STRINGS = {
     "joined-team": "Joined team.",
@@ -49,7 +48,7 @@ class HookProxy(object):
 
     def __getattr__(self, attr):
         from pinax.teams.conf import settings
-        return getattr(settings.TEAMS_HOOKSET, attr)
+        return getattr(settings.PINAX_TEAMS_HOOKSET, attr)
 
 
 hookset = HookProxy()
