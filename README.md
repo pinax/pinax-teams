@@ -172,6 +172,8 @@ Iterable excludes teams user is already associated with.
 
 #### `team_form.html`
 
+#### `team_list.html`
+
 #### `team_manage.html`
 
 #### `_invite_form.html`
