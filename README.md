@@ -72,7 +72,9 @@ Django \ Python | 2.7 | 3.4 | 3.5 | 3.6
 
 To install pinax-teams:
 
-    pip install pinax-teams
+```shell
+    $ pip install pinax-teams
+```
 
 Add `pinax.teams` and other required apps to your `INSTALLED_APPS` setting:
 
@@ -139,7 +141,7 @@ Return iterable of open-membership `Team`s which `request.user` may join.
 If user is "staff" they may join any membership-type team.
 Iterable excludes teams user is already associated with.
 
-```djangotemplate
+```django
     {% available_teams as available_teams %}
 ```
 
@@ -175,6 +177,7 @@ Iterable excludes teams user is already associated with.
 * Convert CI and coverage to CircleCi and CodeCov
 * Add PyPi-compatible long description
 * Use "PINAX_TEAMS_" rather than "TEAMS_" prefix for settings
+* Update installation requirements
 
 ## 0.12.2
 
