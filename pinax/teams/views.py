@@ -51,6 +51,7 @@ class TeamCreateView(LoginRequiredMixin, CreateView):
 
     form_class = TeamForm
     model = Team
+    template_name = "pinax/teams/team_form.html"
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
@@ -63,6 +64,7 @@ class TeamListView(ListView):
 
     model = Team
     context_object_name = "teams"
+    template_name = "pinax/teams/team_list.html"
 
 
 @team_required
