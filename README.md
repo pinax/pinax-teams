@@ -164,10 +164,30 @@ Iterable excludes teams user is already associated with.
 #### pinax_teams.resent_invite
 
 
+### Templates
+
+#### `signup.html`
+
+#### `team_detail.html`
+
+#### `team_form.html`
+
+#### `team_manage.html`
+
+#### `_invite_form.html`
+
+#### `_membership.html`
+
+
 ### Views
 
 
 ## Change Log
+
+### 1.0.1
+
+* Standardize template location to "pinax/teams/"
+* Add template list to documentation
 
 ### 1.0.0
 
