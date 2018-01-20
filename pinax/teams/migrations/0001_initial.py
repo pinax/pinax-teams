@@ -23,7 +23,7 @@ class Migration(migrations.Migration):
                 ('state', models.CharField(max_length=20, verbose_name='state', choices=[(b'applied', 'applied'), (b'invited', 'invited'), (b'declined', 'declined'), (b'rejected', 'rejected'), (b'accepted', 'accepted'), (b'auto-joined', 'auto joined')])),
                 ('role', models.CharField(default=b'member', max_length=20, verbose_name='role', choices=[(b'member', 'member'), (b'manager', 'manager'), (b'owner', 'owner')])),
                 ('created', models.DateTimeField(default=django.utils.timezone.now, verbose_name='created')),
-                ('invite', models.ForeignKey(related_name=b'memberships', verbose_name='invite', blank=True, to='pinax_invitations.JoinInvitation', null=True)),
+                ('invite', models.ForeignKey(related_name='memberships', verbose_name='invite', blank=True, to='pinax_invitations.JoinInvitation', null=True, on_delete=models.SET_NULL)),
             ],
             options={
                 'verbose_name': 'Team',
@@ -42,7 +42,7 @@ class Migration(migrations.Migration):
                 ('member_access', models.CharField(max_length=20, verbose_name='member access', choices=[(b'open', 'open'), (b'application', 'by application'), (b'invitation', 'by invitation')])),
                 ('manager_access', models.CharField(max_length=20, verbose_name='manager access', choices=[(b'add someone', 'add someone'), (b'invite someone', 'invite someone')])),
                 ('created', models.DateTimeField(default=django.utils.timezone.now, verbose_name='created', editable=False)),
-                ('creator', models.ForeignKey(related_name=b'teams_created', verbose_name='creator', to=settings.AUTH_USER_MODEL)),
+                ('creator', models.ForeignKey(related_name='teams_created', verbose_name='creator', to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)),
             ],
             options={
                 'verbose_name': 'Team',
@@ -53,13 +53,13 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='membership',
             name='team',
-            field=models.ForeignKey(related_name=b'memberships', verbose_name='team', to='pinax_teams.Team'),
+            field=models.ForeignKey(related_name='memberships', verbose_name='team', to='pinax_teams.Team', on_delete=models.CASCADE),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='membership',
             name='user',
-            field=models.ForeignKey(related_name=b'memberships', verbose_name='user', blank=True, to=settings.AUTH_USER_MODEL, null=True),
+            field=models.ForeignKey(related_name='memberships', verbose_name='user', blank=True, to=settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL),
             preserve_default=True,
         ),
         migrations.AlterUniqueTogether(

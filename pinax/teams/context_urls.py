@@ -1,11 +1,14 @@
 # include these urls instead of urls.py if you are using the WSGI + Django middlewares
 # to set request.team, manually hooking up List/Create views as well as the accept/reject
 
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 
 from . import views
 
-urlpatterns = patterns(
+app_name = "pinax_teams"
+
+
+urlpatterns = [
     # team specific
     url(r"^detail/$", views.team_detail, name="team_detail"),
     url(r"^join/$", views.team_join, name="team_join"),
@@ -20,4 +23,4 @@ urlpatterns = patterns(
     url(r"^members/(?P<pk>\d+)/promote/$", views.team_member_promote, name="team_member_promote"),  # noqa
     url(r"^members/(?P<pk>\d+)/demote/$", views.team_member_demote, name="team_member_demote"),  # noqa
     url(r"^members/(?P<pk>\d+)/remove/$", views.team_member_remove, name="team_member_remove"),  # noqa
-)
+]

@@ -32,3 +32,6 @@ class TeamAppConf(AppConf):
 
     def configure_hookset(self, value):
         return load_path_attr(value)()
+
+    class Meta:
+        prefix = "pinax_teams"

@@ -1,5 +1,3 @@
-import django
-
 DEBUG = True
 USE_TZ = True
 TIME_ZONE = "UTC"
@@ -14,8 +12,6 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware"
 ]
-if django.VERSION < (1, 10):
-    MIDDLEWARE_CLASSES = MIDDLEWARE
 ROOT_URLCONF = "pinax.teams.tests.urls"
 INSTALLED_APPS = [
     "django.contrib.auth",
