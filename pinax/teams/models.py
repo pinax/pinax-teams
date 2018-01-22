@@ -351,8 +351,8 @@ class BaseMembership(models.Model):
 class SimpleMembership(BaseMembership):
 
     team = models.ForeignKey(SimpleTeam, related_name="memberships", verbose_name=_("team"), on_delete=models.CASCADE)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="simple_memberships", null=True, blank=True, verbose_name=_("user"), on_delete=models.CASCADE)
-    invite = models.ForeignKey(JoinInvitation, related_name="simple_memberships", null=True, blank=True, verbose_name=_("invite"), on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="simple_memberships", null=True, blank=True, verbose_name=_("user"), on_delete=models.SET_NULL)
+    invite = models.ForeignKey(JoinInvitation, related_name="simple_memberships", null=True, blank=True, verbose_name=_("invite"), on_delete=models.SET_NULL)
 
     def __str__(self):
         return "{0} in {1}".format(self.user, self.team)
@@ -367,8 +367,8 @@ class SimpleMembership(BaseMembership):
 class Membership(BaseMembership):
 
     team = models.ForeignKey(Team, related_name="memberships", verbose_name=_("team"), on_delete=models.CASCADE)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="memberships", null=True, blank=True, verbose_name=_("user"), on_delete=models.CASCADE)
-    invite = models.ForeignKey(JoinInvitation, related_name="memberships", null=True, blank=True, verbose_name=_("invite"), on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="memberships", null=True, blank=True, verbose_name=_("user"), on_delete=models.SET_NULL)
+    invite = models.ForeignKey(JoinInvitation, related_name="memberships", null=True, blank=True, verbose_name=_("invite"), on_delete=models.SET_NULL)
 
     def __str__(self):
         return "{0} in {1}".format(self.user, self.team)
