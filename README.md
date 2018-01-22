@@ -186,6 +186,10 @@ Iterable excludes teams user is already associated with.
 
 ## Change Log
 
+### 1.0.2
+
+Revert `on_delete=CASCADE` for `null=True` model fields
+
 ### 1.0.1
 
 * Standardize template location to "pinax/teams/"
