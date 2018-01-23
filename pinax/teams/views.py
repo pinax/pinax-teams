@@ -144,7 +144,7 @@ def team_join(request):
         membership.state = Membership.STATE_AUTO_JOINED
         membership.save()
         messages.success(request, MESSAGE_STRINGS["joined-team"])
-    return redirect("team_detail", slug=team.slug)
+    return redirect(team.get_absolute_url())
 
 
 @team_required
@@ -160,9 +160,9 @@ def team_leave(request):
         membership = Membership.objects.get(team=team, user=request.user)
         membership.delete()
         messages.success(request, MESSAGE_STRINGS["left-team"])
-        return redirect("dashboard")
+        return redirect("pinax_teams:dashboard")
     else:
-        return redirect("team_detail", slug=team.slug)
+        return redirect(team.get_absolute_url())
 
 
 @team_required
@@ -179,7 +179,7 @@ def team_apply(request):
         membership.state = Membership.STATE_APPLIED
         membership.save()
         messages.success(request, MESSAGE_STRINGS["applied-to-join"])
-    return redirect("team_detail", slug=team.slug)
+    return redirect(team.get_absolute_url())
 
 
 @login_required
@@ -188,7 +188,7 @@ def team_accept(request, pk):
     membership = get_object_or_404(Membership, pk=pk)
     if membership.accept(by=request.user):
         messages.success(request, MESSAGE_STRINGS["accepted-application"])
-    return redirect("team_detail", slug=membership.team.slug)
+    return redirect(membership.team.get_absolute_url())
 
 
 @login_required
@@ -197,7 +197,7 @@ def team_reject(request, pk):
     membership = get_object_or_404(Membership, pk=pk)
     if membership.reject(by=request.user):
         messages.success(request, MESSAGE_STRINGS["rejected-application"])
-    return redirect("team_detail", slug=membership.team.slug)
+    return redirect(membership.team.get_absolute_url())
 
 
 class TeamInviteView(FormView):

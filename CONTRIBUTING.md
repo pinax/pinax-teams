@@ -124,7 +124,7 @@ Here is an example of these rules applied:
             super(Task, self).save(**kwargs)
 
         def get_absolute_url(self):
-            return reverse("task_detail", kwargs={"task_id": self.pk})
+            return reverse("pinax_teams:task_detail", kwargs={"task_id": self.pk})
 
         # custom methods
 
