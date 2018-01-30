@@ -312,3 +312,33 @@ class ManagerInviteMemberInvitationTests(BaseTeamTests):
         membership.state = Membership.STATE_DECLINED
         membership.save()
         self.assertFalse(team.can_join(paltman))
+
+class ViewTests(TestCase):
+
+    def test_team_member_resent_invite_view(self):
+        """verify no errors when posting bad data"""
+        user = self.make_user("carla")
+        post_data = {
+        }
+        with self.login(user):
+            self.post("pinax_teams:team_member_resend_invite", data=post_data)
+            self.response_200()
+            
+    def test_team_member_promote_view(self):
+        """verify no errors when posting good form data"""
+        user = self.make_user("amy")
+        post_data = {
+            "email_address": "amy@example.com"
+        }
+        with self.login(user):
+            self.post("pinax_teams:team_member_promote", data=post_data)
+            self.response_200()
+
+    def test_team_member_demote_view(self):
+        """verify no errors when posting bad data"""
+        user = self.make_user("sandee")
+        post_data = {
+        }
+        with self.login(user):
+            self.post("pinax_teams:team_member_demote", data=post_data)
+            self.response_200()
