@@ -186,6 +186,10 @@ Iterable excludes teams user is already associated with.
 
 ## Change Log
 
+### 1.0.4
+
+* Update pinax-invitations version requirement
+
 ### 1.0.3
 
 * Fix namespacing
