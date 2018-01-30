@@ -90,6 +90,7 @@ setup(
         "six>=1.9.0"
     ],
     tests_require=[
+        "django-test-plus",
     ],
     test_suite="runtests.runtests",
     zip_safe=False
