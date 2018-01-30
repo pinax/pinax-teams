@@ -313,32 +313,48 @@ class ManagerInviteMemberInvitationTests(BaseTeamTests):
         membership.save()
         self.assertFalse(team.can_join(paltman))
 
+    
+class ManagerPromoteMemberTests(BaseTeamTests):
+
+    MANAGER_ACCESS = Team.MANAGER_ACCESS_INVITE
+    MEMBER_ACCESS = Team.MEMBER_ACCESS_INVITATION
+    
+    def test_promote_member(self):
+        team = self._create_team()
+        paltman = User.objects.create_user(username="paltman")
+        membership.promote(paltman, role=Membership.ROLE_MANAGER)
+        membership.save()
+        self.assertTrue(team.can_join(paltman))
+        
+        
+class ManagerDemoteMemberTests(BaseTeamTests):
+
+    MANAGER_ACCESS = Team.MANAGER_ACCESS_INVITE
+    MEMBER_ACCESS = Team.MEMBER_ACCESS_INVITATION
+    
+    def test_demote_member(self):
+        team = self._create_team()
+        paltman = User.objects.create_user(username="paltman")
+        membership.demote(paltman, role=Membership.ROLE_MEMBER)
+        membership.save()
+        self.assertTrue(team.can_join(paltman))
+        
+        
 class ViewTests(TestCase):
 
-    def test_team_member_resent_invite_view(self):
-        """verify no errors when posting bad data"""
-        user = self.make_user("carla")
-        post_data = {
-        }
-        with self.login(user):
-            self.post("pinax_teams:team_member_resend_invite", data=post_data)
-            self.response_200()
-            
-    def test_team_member_promote_view(self):
+    def test_team_member_resend_invite_view(self):
         """verify no errors when posting good form data"""
         user = self.make_user("amy")
         post_data = {
             "email_address": "amy@example.com"
         }
-        with self.login(user):
-            self.post("pinax_teams:team_member_promote", data=post_data)
-            self.response_200()
-
-    def test_team_member_demote_view(self):
+        self.post("pinax_teams:team_member_resend_invite", data=post_data)
+        self.response_200()
+        
+    def test_team_member_resend_invite_view_bad_data(self):
         """verify no errors when posting bad data"""
-        user = self.make_user("sandee")
+        user = self.make_user("amy")
         post_data = {
         }
-        with self.login(user):
-            self.post("pinax_teams:team_member_demote", data=post_data)
-            self.response_200()
+        self.post("pinax_teams:team_member_resend_invite", data=post_data)
+        self.response_200()
