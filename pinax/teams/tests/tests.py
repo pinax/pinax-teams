@@ -340,21 +340,25 @@ class ManagerDemoteMemberTests(BaseTeamTests):
         self.assertTrue(team.can_join(paltman))
         
         
-class ViewTests(TestCase):
-
+class ViewTests(BaseTeamTests):        
+    
+    MANAGER_ACCESS = Team.MANAGER_ACCESS_INVITE
+    MEMBER_ACCESS = Team.MEMBER_ACCESS_INVITATION
+    
     def test_team_member_resend_invite_view(self):
-        """verify no errors when posting good form data"""
-        user = self.make_user("amy")
+        """Ensure invite is resend invite view is rendered properly"""
+        team = self._create_team()
+        paltman = User.objects.create_user(username="paltman")
+        membership = team.add_user(paltman, Membership.ROLE_MEMBER)
         post_data = {
-            "email_address": "amy@example.com"
+            "membership": membership,
+            "team": self.team
         }
-        self.post("pinax_teams:team_member_resend_invite", data=post_data)
-        self.response_200()
-        
-    def test_team_member_resend_invite_view_bad_data(self):
-        """verify no errors when posting bad data"""
-        user = self.make_user("amy")
-        post_data = {
-        }
-        self.post("pinax_teams:team_member_resend_invite", data=post_data)
-        self.response_200()
+
+        response = self.post(
+            "teams/_membership.html",
+            pk=comment.pk,
+            data=post_data,
+            extra=dict(HTTP_X_REQUESTED_WITH="XMLHttpRequest")
+        )
+        self.assertEqual(response.status_code, 200)
