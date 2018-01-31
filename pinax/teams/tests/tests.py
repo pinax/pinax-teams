@@ -1,4 +1,5 @@
 from __future__ import unicode_literals
+
 import json
 
 from django.contrib.auth.models import User
@@ -402,7 +403,8 @@ class ViewTests(BaseTeamTests):
                 data=post_data,
             )
             self.assertEqual(response.status_code, 200)
-            json_data = json.loads(self.last_response.content)
+            # convert content to a string, some Python versions do not accept `bytes`
+            json_data = json.loads(self.last_response.content.decode("utf-8"))
             self.assertIn("html", json_data)
             self.assertIn("append-fragments", json_data)
 
@@ -421,6 +423,7 @@ class ViewTests(BaseTeamTests):
                 data=post_data,
             )
             self.assertEqual(response.status_code, 200)
-            json_data = json.loads(self.last_response.content)
+            # convert content to a string, some Python versions do not accept `bytes`
+            json_data = json.loads(self.last_response.content.decode("utf-8"))
             self.assertIn("html", json_data)
             self.assertNotIn("append-fragments", json_data)
