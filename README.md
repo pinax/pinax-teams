@@ -88,11 +88,21 @@ Add `pinax.teams` and other required apps to your `INSTALLED_APPS` setting:
     ]
 ```
 
+Optionally add `TeamMiddleware` to your `MIDDLEWARE` setting:
+
+```python
+    MIDDLEWARE = [
+        # other middleware
+        "pinax.teams.middleware.TeamMiddleware",
+    ]
+```
+
 Finally, add `pinax.teams.urls` to your project urlpatterns:
 
 ```python
     urlpatterns = [
         # other urls
+        url(r"^account/", include("account.urls")),
         url(r"^teams/", include("pinax.teams.urls", namespace="pinax_teams")),
     ]
 ```
