@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     "django.contrib.sites",
     "account",
     "pinax.invitations",
+    "pinax.templates",
     "pinax.teams",
 ]
 SITE_ID = 1
@@ -43,3 +44,4 @@ TEMPLATES = [
         }
     },
 ]
+PINAX_INVITATIONS_DEFAULT_INVITE_ALLOCATION = -1

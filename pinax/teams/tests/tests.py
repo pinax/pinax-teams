@@ -359,3 +359,29 @@ class ViewTests(BaseTeamTests):
                 pk=membership.pk,
             )
             self.assertEqual(response.status_code, 200)
+
+    def test_team_member_resend_invite(self):
+        """Ensure view returns 200"""
+        team = self._create_team()
+        membership = team.invite_user(self.user, "jiggy@widit.com", Membership.ROLE_MEMBER)
+
+        with self.login(self.user):
+            response = self.post(
+                "pinax_teams:team_member_resend_invite",
+                slug=team.slug,
+                pk=membership.pk,
+            )
+            self.assertEqual(response.status_code, 200)
+
+    def test_team_member_revoke_invite(self):
+        """Ensure view returns 200"""
+        team = self._create_team()
+        membership = team.invite_user(self.user, "jiggy@widit.com", Membership.ROLE_MEMBER)
+
+        with self.login(self.user):
+            response = self.post(
+                "pinax_teams:team_member_revoke_invite",
+                slug=team.slug,
+                pk=membership.pk,
+            )
+            self.assertEqual(response.status_code, 200)
