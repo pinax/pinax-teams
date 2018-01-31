@@ -10,7 +10,6 @@ from django.http import (
     JsonResponse,
 )
 from django.shortcuts import get_object_or_404, redirect, render
-from django.template import RequestContext
 from django.template.loader import render_to_string
 from django.utils.decorators import method_decorator
 from django.views.decorators.http import require_POST
@@ -333,7 +332,7 @@ def team_member_resend_invite(request, pk):
 @manager_required
 @require_POST
 def team_member_promote(request, pk):
-    membership = get_object_or_404(request.membership.objects.all(), pk=pk)
+    membership = get_object_or_404(request.team.memberships.all(), pk=pk)
     membership.promote(by=request.user)
     data = {
         "html": render_to_string(

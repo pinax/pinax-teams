@@ -1,3 +1,7 @@
+import os
+
+PACKAGE_ROOT = os.path.abspath(os.path.dirname(__file__))
+
 DEBUG = True
 USE_TZ = True
 TIME_ZONE = "UTC"
@@ -24,3 +28,18 @@ INSTALLED_APPS = [
 ]
 SITE_ID = 1
 SECRET_KEY = "notasecret"
+TEMPLATES = [
+    {
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [
+            os.path.join(PACKAGE_ROOT, "templates"),
+        ],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "debug": True,
+            "context_processors": [
+                "django.contrib.auth.context_processors.auth",
+            ]
+        }
+    },
+]
