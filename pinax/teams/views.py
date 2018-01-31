@@ -324,7 +324,7 @@ def team_member_resend_invite(request, pk):
                 "membership": membership,
                 "team": request.team
             },
-            request=self.request
+            request=request
         )
     }
     return HttpResponse(json.dumps(data), content_type="application/json")
@@ -333,7 +333,7 @@ def team_member_resend_invite(request, pk):
 @manager_required
 @require_POST
 def team_member_promote(request, pk):
-    membership = get_object_or_404(request.team.memberships.all(), pk=pk)
+    membership = get_object_or_404(request.membership.objects.all(), pk=pk)
     membership.promote(by=request.user)
     data = {
         "html": render_to_string(
@@ -342,7 +342,7 @@ def team_member_promote(request, pk):
                 "membership": membership,
                 "team": request.team
             },
-            request=self.request
+            request=request
         )
     }
     return HttpResponse(json.dumps(data), content_type="application/json")
@@ -360,7 +360,7 @@ def team_member_demote(request, pk):
                 "membership": membership,
                 "team": request.team
             },
-            request=self.request
+            request=request
         )
     }
     return HttpResponse(json.dumps(data), content_type="application/json")

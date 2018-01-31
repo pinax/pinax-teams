@@ -313,52 +313,21 @@ class ManagerInviteMemberInvitationTests(BaseTeamTests):
         membership.save()
         self.assertFalse(team.can_join(paltman))
 
-    
-class ManagerPromoteMemberTests(BaseTeamTests):
-
-    MANAGER_ACCESS = Team.MANAGER_ACCESS_INVITE
-    MEMBER_ACCESS = Team.MEMBER_ACCESS_INVITATION
-    
-    def test_promote_member(self):
-        team = self._create_team()
-        paltman = User.objects.create_user(username="paltman")
-        membership.promote(paltman, role=Membership.ROLE_MANAGER)
-        membership.save()
-        self.assertTrue(team.can_join(paltman))
-        
-        
-class ManagerDemoteMemberTests(BaseTeamTests):
-
-    MANAGER_ACCESS = Team.MANAGER_ACCESS_INVITE
-    MEMBER_ACCESS = Team.MEMBER_ACCESS_INVITATION
-    
-    def test_demote_member(self):
-        team = self._create_team()
-        paltman = User.objects.create_user(username="paltman")
-        membership.demote(paltman, role=Membership.ROLE_MEMBER)
-        membership.save()
-        self.assertTrue(team.can_join(paltman))
-        
         
 class ViewTests(BaseTeamTests):        
     
     MANAGER_ACCESS = Team.MANAGER_ACCESS_INVITE
     MEMBER_ACCESS = Team.MEMBER_ACCESS_INVITATION
     
-    def test_team_member_resend_invite_view(self):
+    def test_team_member_promote_view(self):
         """Ensure invite is resend invite view is rendered properly"""
         team = self._create_team()
         paltman = User.objects.create_user(username="paltman")
         membership = team.add_user(paltman, Membership.ROLE_MEMBER)
-        post_data = {
-            "membership": membership,
-            "team": self.team
-        }
 
         response = self.post(
-            "teams/_membership.html",
-            pk=comment.pk,
-            data=post_data,
+            "pinax_teams:team_member_promote",
+            pk=membership.pk,
             extra=dict(HTTP_X_REQUESTED_WITH="XMLHttpRequest")
         )
         self.assertEqual(response.status_code, 200)
