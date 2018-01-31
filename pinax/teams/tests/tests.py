@@ -1,4 +1,5 @@
 from __future__ import unicode_literals
+import json
 
 from django.contrib.auth.models import User
 
@@ -385,3 +386,41 @@ class ViewTests(BaseTeamTests):
                 pk=membership.pk,
             )
             self.assertEqual(response.status_code, 200)
+
+    def test_team_member_invite(self):
+        """Ensure view returns 200"""
+        team = self._create_team()
+
+        post_data = {
+            "invitee": "jiggy@widit.com",
+            "role": Membership.ROLE_MEMBER,
+        }
+        with self.login(self.user):
+            response = self.post(
+                "pinax_teams:team_invite",
+                slug=team.slug,
+                data=post_data,
+            )
+            self.assertEqual(response.status_code, 200)
+            json_data = json.loads(self.last_response.content)
+            self.assertIn("html", json_data)
+            self.assertIn("append-fragments", json_data)
+
+    def test_team_member_invite_bad_data(self):
+        """Ensure view returns 200"""
+        team = self._create_team()
+
+        post_data = {
+            "invitee": "jiggy@widit.com",
+            "role": "lackey",  # invalid role, believe it or not!
+        }
+        with self.login(self.user):
+            response = self.post(
+                "pinax_teams:team_invite",
+                slug=team.slug,
+                data=post_data,
+            )
+            self.assertEqual(response.status_code, 200)
+            json_data = json.loads(self.last_response.content)
+            self.assertIn("html", json_data)
+            self.assertNotIn("append-fragments", json_data)
