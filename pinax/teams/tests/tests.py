@@ -331,3 +331,31 @@ class ViewTests(BaseTeamTests):
                 pk=membership.pk,
             )
             self.assertEqual(response.status_code, 200)
+
+    def test_team_member_demote_view(self):
+        """Ensure view returns 200"""
+        team = self._create_team()
+        paltman = self.make_user("paltman")
+        membership = team.add_user(paltman, Membership.ROLE_MEMBER)
+
+        with self.login(self.user):
+            response = self.post(
+                "pinax_teams:team_member_demote",
+                slug=team.slug,
+                pk=membership.pk,
+            )
+            self.assertEqual(response.status_code, 200)
+
+    def test_team_member_remove_view(self):
+        """Ensure view returns 200"""
+        team = self._create_team()
+        paltman = self.make_user("paltman")
+        membership = team.add_user(paltman, Membership.ROLE_MEMBER)
+
+        with self.login(self.user):
+            response = self.post(
+                "pinax_teams:team_member_remove",
+                slug=team.slug,
+                pk=membership.pk,
+            )
+            self.assertEqual(response.status_code, 200)
