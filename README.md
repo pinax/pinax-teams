@@ -196,6 +196,11 @@ Iterable excludes teams user is already associated with.
 
 ## Change Log
 
+### 1.0.5
+
+* Replace render_to_string `context_instance` kwarg.
+* Add view tests
+
 ### 1.0.4
 
 * Update pinax-invitations version requirement
