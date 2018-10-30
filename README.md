@@ -107,10 +107,7 @@ Finally, add `pinax.teams.urls` to your project urlpatterns:
     ]
 ```
 
-
 ### Usage
-
-
 
 ### Settings
 
@@ -119,7 +116,6 @@ Finally, add `pinax.teams.urls` to your project urlpatterns:
 #### PINAX_TEAMS_NAME_BLACKLIST
 
 #### PINAX_TEAMS_PROFILE_MODEL
-
 
 ### Models
 
@@ -135,13 +131,11 @@ Finally, add `pinax.teams.urls` to your project urlpatterns:
 
 #### Team
 
-
 ### Middleware
 
 #### TeamMiddleware
 
 #### WSGITeamMiddleware
-
 
 ### Template Tags
 
@@ -173,7 +167,6 @@ Iterable excludes teams user is already associated with.
 
 #### pinax_teams.resent_invite
 
-
 ### Templates
 
 #### `signup.html`
@@ -189,7 +182,6 @@ Iterable excludes teams user is already associated with.
 #### `_invite_form.html`
 
 #### `_membership.html`
-
 
 ### Views
 
