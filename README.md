@@ -97,7 +97,7 @@ Optionally add `TeamMiddleware` to your `MIDDLEWARE` setting:
     ]
 ```
 
-Finally, add `pinax.teams.urls` to your project urlpatterns:
+Add `pinax.teams.urls` to your project urlpatterns:
 
 ```python
     urlpatterns = [
