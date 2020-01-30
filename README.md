@@ -53,7 +53,7 @@ Pinax is an open-source platform built on the Django Web Framework. It is an eco
 * pillow
 * pinax-invitations
 * six
-* unicode-slugify
+* python-slugify
 
 See [`setup.py`](https://github.com/pinax/pinax-teams/blob/master/setup.py) for specific required versions of these packages.
 
@@ -187,6 +187,10 @@ Iterable excludes teams user is already associated with.
 
 
 ## Change Log
+
+### 1.0.6
+
+* Switch to using python-slugify from unicode-slugify
 
 ### 1.0.5
 
