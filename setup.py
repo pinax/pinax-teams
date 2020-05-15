@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-VERSION = "1.0.5"
+VERSION = "1.0.6"
 LONG_DESCRIPTION = """
 .. image:: http://pinaxproject.com/pinax-design/patches/pinax-teams.svg
     :target: https://pypi.python.org/pypi/pinax-teams/
@@ -84,7 +84,7 @@ setup(
         "django>=1.11",
         "django-reversion>=2.0.12",
         "pinax-invitations>=6.1.2",
-        "unicode-slugify>=0.1.1",
+        "python-slugify>=3.0.4",
         "Pillow>=2.3.0",
         "django-user-accounts>=2.0.3",
         "six>=1.9.0"
