@@ -16,7 +16,7 @@ class TeamSignupForm(SignupForm):
     team = forms.CharField(label=_("Team"), max_length=50, required=True)
 
     def __init__(self, *args, **kwargs):
-        super(TeamSignupForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.fields.keyOrder = [
             "team",
             "username",
@@ -74,7 +74,7 @@ class TeamInviteUserForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         self.team = kwargs.pop("team")
-        super(TeamInviteUserForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.fields["invitee"].widget.attrs["data-autocomplete-url"] = hookset.build_team_url(
             "team_autocomplete_users",
             self.team.slug

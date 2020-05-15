@@ -7,7 +7,6 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
-from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
 from pinax.invitations.models import JoinInvitation
@@ -199,7 +198,6 @@ class SimpleTeam(BaseTeam):
         verbose_name_plural = _("Simple Teams")
 
 
-@python_2_unicode_compatible
 class Team(BaseTeam):
 
     slug = models.SlugField(unique=True)
@@ -223,7 +221,7 @@ class Team(BaseTeam):
         if not self.id:
             self.slug = create_slug(self.name)
         self.full_clean()
-        super(Team, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
 
 class BaseMembership(models.Model):
@@ -347,7 +345,6 @@ class BaseMembership(models.Model):
         return self.user or self.invite.to_user_email()
 
 
-@python_2_unicode_compatible
 class SimpleMembership(BaseMembership):
 
     team = models.ForeignKey(SimpleTeam, related_name="memberships", verbose_name=_("team"), on_delete=models.CASCADE)
@@ -363,7 +360,6 @@ class SimpleMembership(BaseMembership):
         verbose_name_plural = _("Simple Memberships")
 
 
-@python_2_unicode_compatible
 class Membership(BaseMembership):
 
     team = models.ForeignKey(Team, related_name="memberships", verbose_name=_("team"), on_delete=models.CASCADE)

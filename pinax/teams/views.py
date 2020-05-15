@@ -43,7 +43,7 @@ class TeamSignupView(SignupView):
             self.created_user.teams_created.create(
                 name=form.cleaned_data["team"]
             )
-        super(TeamSignupView, self).after_signup(form)
+        super().after_signup(form)
 
 
 class TeamCreateView(LoginRequiredMixin, CreateView):
@@ -109,10 +109,10 @@ class TeamManageView(TemplateView):
     def dispatch(self, *args, **kwargs):
         self.team = self.request.team
         self.role = self.team.role_for(self.request.user)
-        return super(TeamManageView, self).dispatch(*args, **kwargs)
+        return super().dispatch(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        ctx = super(TeamManageView, self).get_context_data(**kwargs)
+        ctx = super().get_context_data(**kwargs)
         ctx.update({
             "team": self.team,
             "role": self.role,
@@ -206,10 +206,10 @@ class TeamInviteView(FormView):
     @method_decorator(manager_required)
     def dispatch(self, *args, **kwargs):
         self.team = self.request.team
-        return super(TeamInviteView, self).dispatch(*args, **kwargs)
+        return super().dispatch(*args, **kwargs)
 
     def get_form_kwargs(self):
-        form_kwargs = super(TeamInviteView, self).get_form_kwargs()
+        form_kwargs = super().get_form_kwargs()
         form_kwargs.update({"team": self.team})
         return form_kwargs
 

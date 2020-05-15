@@ -3,7 +3,7 @@
 import re
 
 
-class WSGITeamMiddleware(object):
+class WSGITeamMiddleware():
 
     def __init__(self, application):
         self.app = application
