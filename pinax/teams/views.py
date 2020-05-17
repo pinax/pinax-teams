@@ -19,7 +19,6 @@ from django.views.generic.edit import CreateView
 from account.decorators import login_required
 from account.mixins import LoginRequiredMixin
 from account.views import SignupView
-from six import string_types
 
 from .decorators import manager_required, team_required
 from .forms import TeamForm, TeamInviteUserForm, TeamSignupForm
