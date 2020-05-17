@@ -277,7 +277,7 @@ class TeamInviteView(FormView):
     def form_valid(self, form):
         user_or_email = form.cleaned_data["invitee"]
         role = form.cleaned_data["role"]
-        if isinstance(user_or_email, string_types):
+        if isinstance(user_or_email, str):
             self.membership = self.team.invite_user(self.request.user, user_or_email, role)
         else:
             self.membership = self.team.add_user(user_or_email, role, by=self.request.user)

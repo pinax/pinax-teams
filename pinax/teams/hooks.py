@@ -23,7 +23,7 @@ class TeamDefaultHookset():
 
     def build_team_url(self, url_name, team_slug):
         from .urls import app_name
-        return reverse("{}:{}".format(app_name, url_name), args=[team_slug])
+        return reverse(f"{app_name}:{url_name}", args=[team_slug])
 
     def get_autocomplete_result(self, user):
         return {"pk": user.pk, "email": user.email, "name": user.get_full_name()}

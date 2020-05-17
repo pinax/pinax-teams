@@ -19,7 +19,7 @@ from .hooks import hookset
 
 def avatar_upload(instance, filename):
     ext = filename.split(".")[-1]
-    filename = "%s.%s" % (uuid.uuid4(), ext)
+    filename = f"{uuid.uuid4()}.{ext}"
     return os.path.join("avatars", filename)
 
 
@@ -352,7 +352,7 @@ class SimpleMembership(BaseMembership):
     invite = models.ForeignKey(JoinInvitation, related_name="simple_memberships", null=True, blank=True, verbose_name=_("invite"), on_delete=models.SET_NULL)
 
     def __str__(self):
-        return "{0} in {1}".format(self.user, self.team)
+        return f"{self.user} in {self.team}"
 
     class Meta:
         unique_together = [("team", "user", "invite")]
@@ -367,7 +367,7 @@ class Membership(BaseMembership):
     invite = models.ForeignKey(JoinInvitation, related_name="memberships", null=True, blank=True, verbose_name=_("invite"), on_delete=models.SET_NULL)
 
     def __str__(self):
-        return "{0} in {1}".format(self.user, self.team)
+        return f"{self.user} in {self.team}"
 
     class Meta:
         unique_together = [("team", "user", "invite")]

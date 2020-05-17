@@ -23,7 +23,7 @@ def create_teams(obj, user, access):
     will NOT create a new team to replace it.
     """
     for field_name, access_types in access.items():
-        id_field = "{}_id".format(field_name)
+        id_field = f"{field_name}_id"
         # Check that the team is associated with the object via a FK...
         if hasattr(obj, id_field) and getattr(obj, id_field) is None:
             # ...and there is no existing related team.
@@ -31,7 +31,7 @@ def create_teams(obj, user, access):
             # slug that's < 50 characters long.
             # TODO - this is just a workaround:
             next_pk = next(iter(instance.pk for instance in obj.__class__.objects.order_by("-pk")), 0) + 1  # this is a thing a beauty. ;-)
-            team_name = u"{} for {} {}".format(
+            team_name = "{} for {} {}".format(
                 field_name, obj._meta.model_name, next_pk)
             new_team = Team(
                 name=team_name,
