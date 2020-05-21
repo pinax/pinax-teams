@@ -14,7 +14,7 @@ MESSAGE_STRINGS = {
 }
 
 
-class TeamDefaultHookset(object):
+class TeamDefaultHookset():
 
     # allows the search field in the Membership admin
     # to be overridden if the custom user model does
@@ -23,7 +23,7 @@ class TeamDefaultHookset(object):
 
     def build_team_url(self, url_name, team_slug):
         from .urls import app_name
-        return reverse("{}:{}".format(app_name, url_name), args=[team_slug])
+        return reverse(f"{app_name}:{url_name}", args=[team_slug])
 
     def get_autocomplete_result(self, user):
         return {"pk": user.pk, "email": user.email, "name": user.get_full_name()}
@@ -44,7 +44,7 @@ class TeamDefaultHookset(object):
         return getattr(user, "is_staff", False)
 
 
-class HookProxy(object):
+class HookProxy():
 
     def __getattr__(self, attr):
         from pinax.teams.conf import settings

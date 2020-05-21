@@ -19,7 +19,6 @@ from django.views.generic.edit import CreateView
 from account.decorators import login_required
 from account.mixins import LoginRequiredMixin
 from account.views import SignupView
-from six import string_types
 
 from .decorators import manager_required, team_required
 from .forms import TeamForm, TeamInviteUserForm, TeamSignupForm
@@ -43,7 +42,7 @@ class TeamSignupView(SignupView):
             self.created_user.teams_created.create(
                 name=form.cleaned_data["team"]
             )
-        super(TeamSignupView, self).after_signup(form)
+        super().after_signup(form)
 
 
 class TeamCreateView(LoginRequiredMixin, CreateView):
@@ -109,10 +108,10 @@ class TeamManageView(TemplateView):
     def dispatch(self, *args, **kwargs):
         self.team = self.request.team
         self.role = self.team.role_for(self.request.user)
-        return super(TeamManageView, self).dispatch(*args, **kwargs)
+        return super().dispatch(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        ctx = super(TeamManageView, self).get_context_data(**kwargs)
+        ctx = super().get_context_data(**kwargs)
         ctx.update({
             "team": self.team,
             "role": self.role,
@@ -206,10 +205,10 @@ class TeamInviteView(FormView):
     @method_decorator(manager_required)
     def dispatch(self, *args, **kwargs):
         self.team = self.request.team
-        return super(TeamInviteView, self).dispatch(*args, **kwargs)
+        return super().dispatch(*args, **kwargs)
 
     def get_form_kwargs(self):
-        form_kwargs = super(TeamInviteView, self).get_form_kwargs()
+        form_kwargs = super().get_form_kwargs()
         form_kwargs.update({"team": self.team})
         return form_kwargs
 
@@ -277,7 +276,7 @@ class TeamInviteView(FormView):
     def form_valid(self, form):
         user_or_email = form.cleaned_data["invitee"]
         role = form.cleaned_data["role"]
-        if isinstance(user_or_email, string_types):
+        if isinstance(user_or_email, str):
             self.membership = self.team.invite_user(self.request.user, user_or_email, role)
         else:
             self.membership = self.team.add_user(user_or_email, role, by=self.request.user)
