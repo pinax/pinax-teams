@@ -1,15 +1,6 @@
 from django.apps import AppConfig as BaseAppConfig
-
-
-try:
-    from django.utils.translation import ugettext_lazy as _
-except ImportError:
-    from django.utils.translation import gettext_lazy as _
-
-try:
-    import importlib
-except ImportError:
-    from django.utils import importlib
+from django.utils.translation import gettext_lazy as _
+import importlib
 
 
 class AppConfig(BaseAppConfig):

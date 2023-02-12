@@ -64,7 +64,6 @@ Where you can find what you need:
 * django-user-accounts
 * pillow
 * pinax-invitations
-* six
 * python-slugify
 
 See [`setup.py`](https://github.com/pinax/pinax-teams/blob/master/setup.py) for specific required versions of these packages.
@@ -72,10 +71,10 @@ See [`setup.py`](https://github.com/pinax/pinax-teams/blob/master/setup.py) for 
 
 #### Supported Django and Python Versions
 
-Django / Python | 3.6 | 3.7 | 3.8
+Django / Python | 3.7 | 3.8 | 3.9| 3.10
 --------------- | --- | --- | ---
-2.2  |  *  |  *  |  *
-3.0  |  *  |  *  |  *
+3.2  |  *  |  *  |  * |  *
+4.1  |  -  |  -  |  - |  *
 
 
 ## Documentation
@@ -200,12 +199,19 @@ Iterable excludes teams user is already associated with.
 
 ## Change Log
 
+### 2.1.0
+
+* Drop Django 2 and <3.2 and Python 2.*, <3.6 support
+* Add Django 4.0, and Python 3.7, 3.8 and 3.9 support
+* Update packaging configs
+* Direct users to community resources
+
+
 ### 2.0.0
 
 * Drop Django 1.11, 2.0, and 2.1, and Python 2,7, 3.4, and 3.5 support
 * Add Django 2.2 and 3.0, and Python 3.6, 3.7, and 3.8 support
 * Update packaging configs
-* Direct users to community resources
 
 ### 1.0.6
 

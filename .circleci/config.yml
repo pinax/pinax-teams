@@ -34,55 +34,48 @@ jobs:
   lint:
     <<: *common
     docker:
-      - image: circleci/python:3.8
+      - image: circleci/python:3.10
         environment:
           - TOXENV=checkqa
           - UPLOAD_COVERAGE=0
-  py36dj22:
-    <<: *common
-    docker:
-      - image: circleci/python:3.6
-        environment:
-          TOXENV=py36-dj22
-  py36dj30:
-    <<: *common
-    docker:
-      - image: circleci/python:3.6
-        environment:
-          TOXENV=py36-dj30
-  py37dj22:
+  py37dj32:
     <<: *common
     docker:
       - image: circleci/python:3.7
         environment:
-          TOXENV=py37-dj22
-  py37dj30:
-    <<: *common
-    docker:
-      - image: circleci/python:3.7
-        environment:
-          TOXENV=py37-dj30
-  py38dj22:
+          TOXENV=py37-dj32
+  py38dj32:
     <<: *common
     docker:
       - image: circleci/python:3.8
         environment:
-          TOXENV=py38-dj22
-  py38dj30:
+          TOXENV=py38-dj32
+  py39dj32:
     <<: *common
     docker:
-      - image: circleci/python:3.8
+      - image: circleci/python:3.9
         environment:
-          TOXENV=py38-dj30
+          TOXENV=py39-dj32
+  py310dj32:
+    <<: *common
+    docker:
+      - image: circleci/python:3.10
+        environment:
+          TOXENV=py38-dj32
+  py310dj41:
+    <<: *common
+    docker:
+      - image: circleci/python:3.10
+        environment:
+          TOXENV=py310-dj41
 
 workflows:
   version: 2
   test:
     jobs:
       - lint
-      - py36dj22
-      - py36dj30
-      - py37dj22
-      - py37dj30
-      - py38dj22
-      - py38dj30
+      - py37dj32
+      - py38dj32
+      - py39dj32
+      - py310dj32
+      - py310dj41
