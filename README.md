@@ -199,12 +199,10 @@ Iterable excludes teams user is already associated with.
 
 ## Change Log
 
-### 2.1.0
+### 3.0.0
 
 * Drop Django 2 and <3.2 and Python 2.*, <3.6 support
 * Add Django 4.0, and Python 3.7, 3.8 and 3.9 support
-* Update packaging configs
-* Direct users to community resources
 
 
 ### 2.0.0
