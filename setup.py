@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-VERSION = "2.1.0"
+VERSION = "3.0.0"
 LONG_DESCRIPTION = r"""
 .. image:: http://pinaxproject.com/pinax-design/patches/pinax-teams.svg
     :target: https://pypi.python.org/pypi/pinax-teams/
@@ -80,14 +80,14 @@ setup(
     install_requires=[
         "django>=3.2",
         "django-reversion>=5.0.4",
-        "pinax-invitations>=7.0.0",
+        "pinax-invitations>=8.0.0",
         "python-slugify>=7.0.0",
         "Pillow>=9.3.0",
         "django-user-accounts>=3.2.0"
     ],
     tests_require=[
         "django-test-plus>=1.0.22",
-        "pinax-templates>=1.0.4",
+        "pinax-templates>=3.0.0",
     ],
     test_suite="runtests.runtests",
     zip_safe=False
