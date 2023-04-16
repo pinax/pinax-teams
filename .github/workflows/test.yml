@@ -18,14 +18,10 @@ jobs:
       uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
-    - uses: actions/cache@v2
-      with:
-        path: ~/.cache/pip
-        key: ${{ hashFiles('requirements.txt') }}-${{ hashFiles('requirements-testing.txt')}}-${{ hashFiles('tox.ini') }}-${{ matrix.python-version }}-${{ matrix.django-version }}
     - name: Install Dependencies
       run: |
         python -m pip install --upgrade pip
-        echo ${{ matrix.django-version }} > requirements-django${{ matrix.django-version }}.txt
+        python -m pip install "django ==${{ matrix.django-version }}"
         pip install -r requirements.txt -r requirements-testing.txt -c requirements-django${{ matrix.django-version }}.txt
     - name: Run Tests
       run: |
