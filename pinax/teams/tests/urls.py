@@ -1,6 +1,6 @@
-from django.conf.urls import include, url
+from django.urls import include, re_path
 
 urlpatterns = [
-    url(r"^account/", include("account.urls")),
-    url(r"^", include("pinax.teams.urls", namespace="pinax_teams")),
+    re_path(r"^account/", include("account.urls")),
+    re_path(r"^", include("pinax.teams.urls", namespace="pinax_teams")),
 ]

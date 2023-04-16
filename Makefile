@@ -2,9 +2,9 @@ all: init test
 
 init:
 	python setup.py develop
-	pip install tox "coverage<5"
+	pip install tox coverage
 
 test:
 	coverage erase
-	tox --parallel--safe-build
+	tox
 	coverage html
