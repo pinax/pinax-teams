@@ -22,7 +22,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         python -m pip install "django ==${{ matrix.django-version }}"
-        pip install -r requirements.txt -r requirements-testing.txt -c requirements-django${{ matrix.django-version }}.txt
+        make init
     - name: Run Tests
       run: |
         make test
